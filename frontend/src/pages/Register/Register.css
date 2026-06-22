@@ -1,0 +1,134 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: radial-gradient(circle at center, #1b202a 0%, var(--color-bg) 100%);
+}
+
+.register-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.register-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--color-primary);
+  letter-spacing: 1px;
+}
+
+.register-subtitle {
+  color: var(--color-text-muted);
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+.register-form {
+  text-align: left;
+}
+
+.register-form-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.register-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.register-input {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-family: var(--font-base);
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.register-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.register-error {
+  color: var(--color-danger);
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.register-submit-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.register-submit-btn:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.register-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.register-footer-text {
+  margin-top: 24px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 0;
+  }
+  .register-card {
+    padding: 40px 1rem;
+    max-width: 100%;
+    width: 100%;
+    border-radius: 0;
+    border: none;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: radial-gradient(circle at center, #1b202a 0%, var(--color-bg) 100%);
+  }
+}
+
+@media (min-width: 481px) {
+  .register-card {
+    max-width: 480px;
+    margin: auto;
+  }
+}
+

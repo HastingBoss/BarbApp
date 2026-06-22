@@ -1,0 +1,146 @@
+.staff-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: radial-gradient(circle at center, #14171f 0%, var(--color-bg) 100%);
+}
+
+.staff-login-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  position: relative;
+}
+
+.staff-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: rgba(207, 168, 100, 0.1);
+  color: var(--color-primary);
+  border: 1px solid rgba(207, 168, 100, 0.2);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+
+.staff-login-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  color: var(--color-text);
+  letter-spacing: 1px;
+}
+
+.staff-login-subtitle {
+  color: var(--color-text-muted);
+  margin-bottom: 30px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.staff-login-form {
+  text-align: left;
+}
+
+.staff-login-form-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.staff-login-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.staff-login-input {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-family: var(--font-base);
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.staff-login-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.staff-login-error {
+  color: var(--color-danger);
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.staff-login-submit-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.staff-login-submit-btn:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.staff-login-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.staff-back-btn {
+  width: 100%;
+  margin-top: 24px;
+  padding: 12px;
+  font-size: 14px !important;
+}
+
+@media (max-width: 480px) {
+  .staff-login-container {
+    padding: 0;
+  }
+  .staff-login-card {
+    padding: 40px 1rem;
+    max-width: 100%;
+    width: 100%;
+    border-radius: 0;
+    border: none;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: radial-gradient(circle at center, #14171f 0%, var(--color-bg) 100%);
+  }
+}

@@ -1,0 +1,1203 @@
+{
+  "info": {
+    "_postman_id": "7a3b3a3c-d38a-4933-bfb9-623cf5c77840",
+    "name": "Barbería API",
+    "description": "Colección completa para la API de Barbería que gestiona usuarios, perfiles de barberos, servicios personalizados, reservas de turnos, configuraciones globales y cron jobs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Endpoints relacionados con la autenticación, registro y verificación de correo de usuarios.",
+      "item": [
+        {
+          "name": "POST /api/auth/register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Juan Pérez\",\n  \"email\": \"juan.perez@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Registra un nuevo usuario cliente en el sistema. Se le envía un correo electrónico de verificación de manera asíncrona sin bloquear la respuesta de registro exitoso."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/auth/login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"token\", pm.response.json().token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan.perez@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Inicia sesión con las credenciales del usuario. Si es correcto, un script de Test guarda automáticamente el token JWT devuelto en la variable de la colección llamada {{token}}."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/auth/me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Obtiene el perfil y datos básicos del usuario autenticado actual, basándose en el Bearer token enviado en los headers."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/auth/verify-email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/verify-email?token=example_token_here",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "verify-email"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "example_token_here"
+                }
+              ]
+            },
+            "description": "Endpoint público que recibe un token por query param, verifica su validez y firma, y marca la dirección de correo electrónico del usuario como verificada en la base de datos (emailVerified: true)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Barberos",
+      "description": "Endpoints para la gestión de barberos, perfiles de trabajo, especialidades y consulta de reportes o métricas.",
+      "item": [
+        {
+          "name": "GET /api/barberos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/barberos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barberos"
+              ]
+            },
+            "description": "Recupera una lista con todos los barberos registrados y sus perfiles asociados (horarios y servicios)."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/barberos/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/barberos/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barberos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f1"
+                }
+              ]
+            },
+            "description": "Obtiene los detalles de perfil completos de un barbero específico utilizando su ID de recurso."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/barberos/me/perfil",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/barberos/me/perfil",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barberos",
+                "me",
+                "perfil"
+              ]
+            },
+            "description": "Permite al barbero autenticado actual obtener sus propios datos de perfil de trabajo de forma directa."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/barberos/por-servicio/:servicioId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/barberos/por-servicio/:servicioId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barberos",
+                "por-servicio",
+                ":servicioId"
+              ],
+              "variable": [
+                {
+                  "key": "servicioId",
+                  "value": "60d5ec4b1a4a5c0015b6d5f2"
+                }
+              ]
+            },
+            "description": "Lista aquellos barberos que tienen asignado y pueden realizar el servicio provisto en el ID del parámetro."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/barberos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Carlos Barbero\",\n  \"email\": \"carlos@example.com\",\n  \"password\": \"barberopassword\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/barberos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barberos"
+              ]
+            },
+            "description": "Crea una nueva cuenta de usuario con rol 'barbero' y genera su perfil correspondiente en una sola transacción (Requiere autorización de Administrador)."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/barberos/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"active\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/barberos/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barberos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f1"
+                }
+              ]
+            },
+            "description": "Actualiza la información general del perfil del barbero (ej. activarlo/desactivarlo) identificado por su ID (Requiere privilegios de Administrador)."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/barberos/:id/metricas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/barberos/:id/metricas?desde=2026-06-01T00:00:00.000Z&hasta=2026-06-30T23:59:59.999Z",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barberos",
+                ":id",
+                "metricas"
+              ],
+              "query": [
+                {
+                  "key": "desde",
+                  "value": "2026-06-01T00:00:00.000Z"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-06-30T23:59:59.999Z"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f1"
+                }
+              ]
+            },
+            "description": "Calcula el rendimiento del barbero en un rango de fechas. Devuelve total de turnos, recaudación estimada acumulada y volumen por cada servicio realizado (Solo Administrador)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Horarios",
+      "description": "Endpoints para gestionar la disponibilidad horaria semanal de los barberos.",
+      "item": [
+        {
+          "name": "PUT /api/barberos/:id/horarios",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"horarios\": [\n    {\n      \"dia\": \"lunes\",\n      \"horaInicio\": \"09:00\",\n      \"horaFin\": \"18:00\"\n    },\n    {\n      \"dia\": \"martes\",\n      \"horaInicio\": \"09:00\",\n      \"horaFin\": \"18:00\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/barberos/:id/horarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barberos",
+                ":id",
+                "horarios"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f1"
+                }
+              ]
+            },
+            "description": "Permite actualizar el cronograma semanal de horarios de atención de un barbero (Permitido para el Administrador o el propio Barbero titular)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Servicios",
+      "description": "Endpoints para la creación, lectura, actualización y desactivación de los servicios ofrecidos en el catálogo global.",
+      "item": [
+        {
+          "name": "GET /api/servicios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servicios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicios"
+              ]
+            },
+            "description": "Retorna la lista de todos los servicios ofrecidos por la barbería."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/servicios/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servicios/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicios",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f2"
+                }
+              ]
+            },
+            "description": "Muestra los detalles completos de un servicio en particular mediante su ID."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/servicios",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Corte clásico\",\n  \"duracion\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/servicios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicios"
+              ]
+            },
+            "description": "Crea y publica un nuevo servicio con su nombre y duración promedio (Solo Administrador)."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/servicios (Corte + barba)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Corte + barba\",\n  \"duracion\": 45\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/servicios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicios"
+              ]
+            },
+            "description": "Crea y publica el servicio 'Corte + barba' con duración promedio de 45 minutos (Solo Administrador)."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/servicios/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"duracion\": 45\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/servicios/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicios",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f2"
+                }
+              ]
+            },
+            "description": "Actualiza parcialmente los valores de un servicio existente (Solo Administrador)."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/servicios/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/servicios/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "servicios",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f2"
+                }
+              ]
+            },
+            "description": "Realiza una desactivación suave (soft-delete) del servicio, poniéndolo inactivo de manera que no esté seleccionable para nuevos turnos (Solo Administrador)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Barbero-Servicios",
+      "description": "Endpoints para gestionar la asignación de servicios específicos a cada barbero con sus respectivos precios personalizados.",
+      "item": [
+        {
+          "name": "GET /api/barbero-servicios/barbero/:barberoId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/barbero-servicios/barbero/:barberoId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barbero-servicios",
+                "barbero",
+                ":barberoId"
+              ],
+              "variable": [
+                {
+                  "key": "barberoId",
+                  "value": "60d5ec4b1a4a5c0015b6d5f1"
+                }
+              ]
+            },
+            "description": "Retorna la lista de servicios que ofrece un barbero específico junto con su precio personalizado."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/barbero-servicios/servicio/:servicioId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/barbero-servicios/servicio/:servicioId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barbero-servicios",
+                "servicio",
+                ":servicioId"
+              ],
+              "variable": [
+                {
+                  "key": "servicioId",
+                  "value": "60d5ec4b1a4a5c0015b6d5f2"
+                }
+              ]
+            },
+            "description": "Retorna la lista de barberos que ofrecen un servicio específico junto con sus precios."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/barbero-servicios",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"barberoId\": \"60d5ec4b1a4a5c0015b6d5f1\",\n  \"servicioId\": \"60d5ec4b1a4a5c0015b6d5f2\",\n  \"precio\": 3000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/barbero-servicios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barbero-servicios"
+              ]
+            },
+            "description": "Asigna un servicio a un barbero con un precio personalizado (ej. Senior Barbero: $3000, Junior Barbero: $2200). Solo accesible para Administradores."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/barbero-servicios/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"precio\": 3200\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/barbero-servicios/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barbero-servicios",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f8"
+                }
+              ]
+            },
+            "description": "Permite al Administrador actualizar el precio personalizado o activar/desactivar la relación barbero-servicio."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/barbero-servicios/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/barbero-servicios/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "barbero-servicios",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f8"
+                }
+              ]
+            },
+            "description": "Realiza un soft delete (desactivación) de la relación barbero-servicio (Solo Administrador)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Turnos",
+      "description": "Endpoints para consultar disponibilidad, solicitar reservas, aceptar/rechazar por parte del barbero, y gestionar historial.",
+      "item": [
+        {
+          "name": "GET /api/turnos/disponibilidad",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/turnos/disponibilidad?barberoId=60d5ec4b1a4a5c0015b6d5f1&servicioId=60d5ec4b1a4a5c0015b6d5f2&fecha=2026-06-12",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "turnos",
+                "disponibilidad"
+              ],
+              "query": [
+                {
+                  "key": "barberoId",
+                  "value": "60d5ec4b1a4a5c0015b6d5f1"
+                },
+                {
+                  "key": "servicioId",
+                  "value": "60d5ec4b1a4a5c0015b6d5f2"
+                },
+                {
+                  "key": "fecha",
+                  "value": "2026-06-12"
+                }
+              ]
+            },
+            "description": "Consulta disponibilidad horaria filtrando por barbero, servicio y fecha."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/turnos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"barberoId\": \"60d5ec4b1a4a5c0015b6d5f1\",\n  \"barberoServicioId\": \"60d5ec4b1a4a5c0015b6d5f8\",\n  \"fecha\": \"2026-06-12\",\n  \"horaInicio\": \"09:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/turnos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "turnos"
+              ]
+            },
+            "description": "Reserva un turno para un usuario cliente registrado. El turno se crea en estado 'pendiente' a la espera de aceptación por el barbero."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/turnos (invitado)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"barberoId\": \"60d5ec4b1a4a5c0015b6d5f1\",\n  \"barberoServicioId\": \"60d5ec4b1a4a5c0015b6d5f8\",\n  \"fecha\": \"2026-06-12\",\n  \"horaInicio\": \"09:30\",\n  \"nombre\": \"Cliente Invitado\",\n  \"email\": \"invitado@example.com\",\n  \"telefono\": \"1122334455\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/turnos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "turnos"
+              ]
+            },
+            "description": "Reserva un turno para un cliente invitado de forma temporal. Requiere nombre, email y teléfono."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/turnos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/turnos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "turnos"
+              ]
+            },
+            "description": "Recupera el listado completo de todos los turnos registrados en la base de datos (Solo Administrador)."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/turnos/barbero/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/turnos/barbero/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "turnos",
+                "barbero",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f1"
+                }
+              ]
+            },
+            "description": "Obtiene la lista de turnos (completados, pendientes, etc.) asignados a un barbero por su ID (Administrador o el propio Barbero asignado)."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/turnos/barbero/:id/pendientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/turnos/barbero/:id/pendientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "turnos",
+                "barbero",
+                ":id",
+                "pendientes"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f1"
+                }
+              ]
+            },
+            "description": "Obtiene únicamente la lista de turnos en estado 'pendiente' para que el barbero decida si aceptar o rechazar (Administrador o el propio Barbero asignado)."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/turnos/barbero/:id/resumen-dia",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/turnos/barbero/:id/resumen-dia?fecha=2026-06-12",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "turnos",
+                "barbero",
+                ":id",
+                "resumen-dia"
+              ],
+              "query": [
+                {
+                  "key": "fecha",
+                  "value": "2026-06-12"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f1"
+                }
+              ]
+            },
+            "description": "Genera una agenda semanal/diaria textual formateada del barbero para una fecha específica."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/turnos/cliente/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/turnos/cliente/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "turnos",
+                "cliente",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f4"
+                }
+              ]
+            },
+            "description": "Retorna el historial completo de turnos reservados por un cliente determinado (Permitido para Administrador o para el propio Cliente)."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/turnos/:id (cancelar cliente)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "Opcional. Requerido si el turno pertenece a un usuario registrado."
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/turnos/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "turnos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f9"
+                }
+              ]
+            },
+            "description": "Cancela un turno por parte del cliente. Si se cancela con menos de 1 hora de anticipación, se aplica recargo en el perfil del cliente."
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/turnos/:id/completar",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/turnos/:id/completar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "turnos",
+                ":id",
+                "completar"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d5ec4b1a4a5c0015b6d5f9"
+                }
+              ]
+            },
+            "description": "Marca un turno como completado modificando su estado de 'accepted' a 'completado' (Permitido para el Administrador o el Barbero)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Config",
+      "description": "Endpoints para acceder y modificar las variables globales de configuración del negocio (porcentajes de recargos y agendas de cron).",
+      "item": [
+        {
+          "name": "GET /api/config",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "config"
+              ]
+            },
+            "description": "Devuelve el objeto de configuración actual (porcentaje de recargo por inasistencias y horarios de disparo de notificaciones)."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/config",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recargoPorcentaje\": 10,\n  \"horaRecordatorio\": \"08:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "config"
+              ]
+            },
+            "description": "Actualiza la configuración global del sistema en la base de datos (Solo Administrador)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cron",
+      "description": "Servicios diseñados para ser gatillados de forma programada periódica (por ejemplo, mediante plataformas de orquestación como Vercel Crons o Node-Cron).",
+      "item": [
+        {
+          "name": "GET /api/cron/recordatorios",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <CRON_SECRET>",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cron/recordatorios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cron",
+                "recordatorios"
+              ]
+            },
+            "description": "Dispara el proceso masivo diario que busca los turnos reservados para el día y envía correos electrónicos recordatorios a los clientes involucrados. Requiere el token secreto de CRON."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

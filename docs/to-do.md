@@ -1,0 +1,3 @@
+- [x] Lista de Endpoints (Postman Collection)
+- [x] Tabla de entidad/relacion (database_schema.md, diseño_relacional.md)
+- [x] Wireframe con flujo de usuario

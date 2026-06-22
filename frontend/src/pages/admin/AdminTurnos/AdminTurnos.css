@@ -1,0 +1,148 @@
+.turnos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.turnos-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.turnos-header h1 span {
+  color: var(--color-primary);
+}
+
+.turnos-table-container {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
+}
+
+.turnos-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.turnos-th, .turnos-td {
+  padding: 16px 20px;
+}
+
+.turnos-th {
+  background-color: var(--color-border);
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.turnos-td {
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 15px;
+}
+
+.turnos-tr:last-child .turnos-td {
+  border-bottom: none;
+}
+
+.turnos-tr:hover .turnos-td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.turnos-loading-text {
+  margin-top: 12px;
+}
+
+.turnos-no-surcharge {
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 768px) {
+  .turnos-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .turnos-table-container {
+    background: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  .turnos-table, 
+  .turnos-table tbody, 
+  .turnos-tr, 
+  .turnos-td {
+    display: block;
+    width: 100%;
+  }
+
+  .turnos-table thead {
+    display: none;
+  }
+
+  .turnos-tr {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .turnos-td {
+    border-bottom: 1px solid var(--color-border) !important;
+    padding: 10px 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    text-align: left;
+  }
+
+  .turnos-td:last-child {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+  }
+
+  .turnos-td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--color-primary);
+    text-transform: uppercase;
+  }
+
+  .actions-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .actions-cell button, .actions-cell .btn {
+    width: 100% !important;
+  }
+}
+
+

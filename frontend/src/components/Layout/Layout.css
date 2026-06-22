@@ -1,0 +1,234 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Base reset for hamburger */
+.navbar-hamburger {
+  display: none;
+}
+
+.navbar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
+/* Desktop layout: Sidebar */
+@media (min-width: 769px) {
+  .app-layout {
+    flex-direction: row;
+  }
+
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    background-color: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    padding: 40px 24px;
+    z-index: 100;
+    overflow-y: auto;
+  }
+
+  .navbar-brand {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--color-primary);
+    letter-spacing: 1px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  .navbar-brand span {
+    color: var(--color-text);
+  }
+
+  .navbar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .navbar-item {
+    color: var(--color-text-muted);
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+    display: block;
+  }
+
+  .navbar-item:hover, .navbar-item.active {
+    color: var(--color-text);
+    background-color: var(--color-border);
+  }
+
+  .navbar-user {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-top: 1px solid var(--color-border);
+    padding-top: 20px;
+    margin-top: auto;
+    align-items: stretch;
+  }
+
+  .navbar-user-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+    text-align: center;
+  }
+
+  .navbar-logout-btn {
+    background-color: var(--color-border);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-logout-btn:hover {
+    background-color: var(--color-text-muted);
+    color: var(--color-bg);
+  }
+
+  .main-content {
+    flex: 1;
+    margin-left: 260px;
+    padding: 40px;
+    width: calc(100% - 260px);
+  }
+}
+
+/* Mobile & Tablet layout: Top bar + Drawer */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 100;
+  }
+
+  .navbar-brand {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--color-primary);
+    letter-spacing: 1px;
+  }
+
+  .navbar-brand span {
+    color: var(--color-text);
+  }
+
+  .navbar-hamburger {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1001;
+    padding: 8px;
+  }
+
+  .navbar-menu {
+    position: fixed;
+    top: 0;
+    right: -280px;
+    width: 280px;
+    height: 100vh;
+    background-color: var(--color-surface);
+    border-left: 1px solid var(--color-border);
+    padding: 90px 24px 40px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+    transition: right 0.3s ease;
+    z-index: 1000;
+  }
+
+  .navbar-menu.open {
+    right: 0;
+  }
+
+  .navbar-item {
+    color: var(--color-text-muted);
+    font-weight: 500;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+    display: block;
+    font-size: 16px;
+  }
+
+  .navbar-item:hover, .navbar-item.active {
+    color: var(--color-text);
+    background-color: var(--color-border);
+  }
+
+  .navbar-user {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-top: 1px solid var(--color-border);
+    padding-top: 20px;
+    margin-top: auto;
+  }
+
+  .navbar-user-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  .navbar-logout-btn {
+    background-color: var(--color-border);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: var(--radius);
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .main-content {
+    flex: 1;
+    margin-top: 70px;
+    padding: 20px;
+    width: 100%;
+  }
+}
+

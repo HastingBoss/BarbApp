@@ -1,0 +1,16 @@
+.cliente-reserva-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.cliente-reserva-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.cliente-reserva-header h1 span {
+  color: var(--color-primary);
+}

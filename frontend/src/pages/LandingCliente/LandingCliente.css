@@ -1,0 +1,157 @@
+.landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: radial-gradient(circle at center, #1b202a 0%, var(--color-bg) 100%);
+}
+
+.landing-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.landing-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: 2px;
+}
+
+.landing-title span {
+  color: var(--color-primary);
+}
+
+.landing-subtitle {
+  color: var(--color-text-muted);
+  font-size: 15px;
+  margin-top: -16px;
+}
+
+.landing-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.landing-btn {
+  width: 100%;
+  padding: 14px !important;
+  font-size: 16px !important;
+}
+
+.loyalty-promo-section {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.loyalty-promo-section h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.loyalty-promo-text {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.landing-benefits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  margin-top: 4px;
+}
+
+.landing-spinner-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  padding: 10px 0;
+}
+
+.landing-benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.01);
+  border-radius: 6px;
+}
+
+.landing-benefit-badge {
+  background-color: rgba(207, 168, 100, 0.15);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.landing-benefit-desc {
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.landing-no-benefits {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.landing-staff-link {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: 8px;
+}
+
+.staff-link {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.staff-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .landing-container {
+    padding: 0;
+  }
+  .landing-card {
+    padding: 40px 20px;
+    max-width: 100%;
+    width: 100%;
+    border-radius: 0;
+    border: none;
+    min-height: 100vh;
+    justify-content: center;
+    background: radial-gradient(circle at center, #1b202a 0%, var(--color-bg) 100%);
+  }
+}
