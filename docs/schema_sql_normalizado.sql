@@ -25,10 +25,11 @@ CREATE TABLE users (
 
 CREATE TABLE barberos (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id INTEGER UNIQUE NOT NULL,
     active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE servicios (
@@ -42,13 +43,15 @@ CREATE TABLE servicios (
 
 CREATE TABLE barbero_servicios (
     id SERIAL PRIMARY KEY,
-    barbero_id INTEGER NOT NULL REFERENCES barberos(id) ON DELETE CASCADE,
-    servicio_id INTEGER NOT NULL REFERENCES servicios(id) ON DELETE CASCADE,
+    barbero_id INTEGER NOT NULL,
+    servicio_id INTEGER NOT NULL,
     precio NUMERIC(10, 2) NOT NULL,
     active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (barbero_id, servicio_id)
+    UNIQUE (barbero_id, servicio_id),
+    FOREIGN KEY (barbero_id) REFERENCES barberos(id) ON DELETE CASCADE,
+    FOREIGN KEY (servicio_id) REFERENCES servicios(id) ON DELETE CASCADE
 );
 
 -- NOTA: Horarios no existen como tabla en el esquema simplificado de SQL.
@@ -65,8 +68,8 @@ CREATE TABLE barbero_servicios (
 -- =========================================================================
 CREATE TABLE turnos (
     id SERIAL PRIMARY KEY,
-    barbero_id INTEGER NOT NULL REFERENCES barberos(id) ON DELETE CASCADE,
-    barbero_servicio_id INTEGER NOT NULL REFERENCES barbero_servicios(id) ON DELETE RESTRICT,
+    barbero_id INTEGER NOT NULL,
+    barbero_servicio_id INTEGER NOT NULL,
     cliente_id INTEGER NOT NULL, -- Apunta a users(id) si cliente_model es 'User'
     cliente_model VARCHAR(50) NOT NULL, -- 'User' o 'ClienteInvitado'
     fecha DATE NOT NULL,
@@ -74,7 +77,9 @@ CREATE TABLE turnos (
     estado turno_estado DEFAULT 'pendiente',
     cancelado_en TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (barbero_id) REFERENCES barberos(id) ON DELETE CASCADE,
+    FOREIGN KEY (barbero_servicio_id) REFERENCES barbero_servicios(id) ON DELETE RESTRICT
 );
 
 -- Evita solapamientos para turnos que estén activos (estado 'pendiente')
