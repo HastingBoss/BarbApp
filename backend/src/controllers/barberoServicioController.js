@@ -34,22 +34,23 @@ const barberoServicioController = {
       const barbero = req.body.barbero || req.body.barberoId;
       const servicio = req.body.servicio || req.body.servicioId;
       const precio = req.body.precio;
-      if (!barbero || !servicio || precio === undefined) {
-        throw ServerError.badRequest("barbero, servicio y precio son requeridos");
+      const duracion = req.body.duracion;
+      if (!barbero || !servicio) {
+        throw ServerError.badRequest("barbero y servicio son requeridos");
       }
 
       // Check if combination already exists
       const existing = await barberoServicioRepository.findOne(barbero, servicio);
       if (existing) {
-        // If it exists but is inactive, reactivate it and update price
+        // If it exists but is inactive, reactivate it and update price/duration
         if (!existing.active) {
-          const updated = await barberoServicioRepository.updateById(existing._id, { precio, active: true });
+          const updated = await barberoServicioRepository.updateById(existing._id, { precio, duracion, active: true });
           return res.status(200).json(updated);
         }
         throw ServerError.conflict("Esta combinación de barbero y servicio ya existe");
       }
 
-      const relation = await barberoServicioRepository.create({ barbero, servicio, precio });
+      const relation = await barberoServicioRepository.create({ barbero, servicio, precio, duracion });
       res.status(201).json(relation);
     } catch (err) {
       next(err);
@@ -58,9 +59,10 @@ const barberoServicioController = {
 
   async updateById(req, res, next) {
     try {
-      const { precio, active } = req.body;
+      const { precio, duracion, active } = req.body;
       const data = {};
       if (precio !== undefined) data.precio = precio;
+      if (duracion !== undefined) data.duracion = duracion;
       if (active !== undefined) data.active = active;
 
       const updated = await barberoServicioRepository.updateById(req.params.id, data);

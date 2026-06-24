@@ -12,6 +12,7 @@ const barberoRoutes = require("./routes/barberos");
 const servicioRoutes = require("./routes/servicios");
 const turnoRoutes = require("./routes/turnos");
 const barberoServicioRoutes = require("./routes/barberoServicios");
+const configRoutes = require("./routes/config");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use("/api/barberos", barberoRoutes);
 app.use("/api/servicios", servicioRoutes);
 app.use("/api/turnos", turnoRoutes);
 app.use("/api/barbero-servicios", barberoServicioRoutes);
+app.use("/api/config", configRoutes);
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 

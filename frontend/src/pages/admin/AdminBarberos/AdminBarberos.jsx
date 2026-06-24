@@ -60,12 +60,14 @@ export default function AdminBarberos() {
         return {
           servicioId: s._id,
           nombre: s.nombre,
-          duracion: s.duracion,
+          duracionBase: s.duracion,
           active: match ? match.active : false,
-          precio: match ? match.precio : s.precio || 0,
+          precio: match && match.precio !== undefined && match.precio !== null ? match.precio : "",
+          duracion: match && match.duracion !== undefined && match.duracion !== null ? match.duracion : "",
           relationId: match ? match._id : null,
           originalActive: match ? match.active : false,
-          originalPrecio: match ? match.precio : 0
+          originalPrecio: match && match.precio !== undefined && match.precio !== null ? match.precio : "",
+          originalDuracion: match && match.duracion !== undefined && match.duracion !== null ? match.duracion : ""
         };
       });
       setTempServicios(mapped);
@@ -83,21 +85,23 @@ export default function AdminBarberos() {
     setActualizarServiciosError("");
     try {
       for (const item of tempServicios) {
+        const precio = item.precio === "" ? undefined : Number(item.precio);
+        const duracion = item.duracion === "" ? undefined : Number(item.duracion);
+
         if (item.active && !item.relationId) {
-          // POST /api/barbero-servicios
           await api.post("/barbero-servicios", {
             barbero: selectedBarbero._id,
             servicio: item.servicioId,
-            precio: item.precio
+            precio,
+            duracion
           });
         } else if (!item.active && item.relationId && item.originalActive) {
-          // DELETE /api/barbero-servicios/:id (soft delete)
           await api.delete(`/barbero-servicios/${item.relationId}`);
         } else if (item.active && item.relationId) {
-          // Update price or reactivate if changed
-          if (item.precio !== item.originalPrecio || !item.originalActive) {
+          if (item.precio !== item.originalPrecio || item.duracion !== item.originalDuracion || !item.originalActive) {
             await api.put(`/barbero-servicios/${item.relationId}`, {
-              precio: item.precio,
+              precio,
+              duracion,
               active: true
             });
           }
@@ -272,33 +276,59 @@ export default function AdminBarberos() {
                   <p className="no-services-text">No hay servicios cargados en el sistema.</p>
                 ) : (
                   tempServicios.map((item, index) => (
-                    <div key={item.servicioId} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", borderBottom: "1px solid var(--color-border)", paddingBottom: "10px" }}>
-                      <label className="checkbox-label" style={{ flex: 1, margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
-                        <input
-                          type="checkbox"
-                          checked={item.active}
-                          onChange={() => {
-                            setTempServicios(prev => prev.map((x, i) => i === index ? { ...x, active: !x.active } : x));
-                          }}
-                        />
-                        <span>
-                          <strong>{item.nombre}</strong> ({item.duracion} min)
-                        </span>
-                      </label>
+                    <div key={item.servicioId} style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "16px", borderBottom: "1px solid var(--color-border)", paddingBottom: "12px" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <label className="checkbox-label" style={{ margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
+                          <input
+                            type="checkbox"
+                            checked={item.active}
+                            onChange={() => {
+                              setTempServicios(prev => prev.map((x, i) => i === index ? { ...x, active: !x.active } : x));
+                            }}
+                          />
+                          <span>
+                            <strong>{item.nombre}</strong> (Base: {item.duracionBase} min)
+                          </span>
+                        </label>
+                      </div>
                       {item.active && (
-                        <input
-                          type="number"
-                          min="0"
-                          value={item.precio}
-                          onChange={(e) => {
-                            const val = parseFloat(e.target.value) || 0;
-                            setTempServicios(prev => prev.map((x, i) => i === index ? { ...x, precio: val } : x));
-                          }}
-                          className="login-input"
-                          style={{ width: "100px", padding: "6px 8px", margin: 0 }}
-                          placeholder="Precio"
-                          required
-                        />
+                        <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>
+                          <div style={{ flex: 1 }}>
+                            <label style={{ fontSize: "11px", color: "var(--color-text-muted)", display: "block", marginBottom: "2px" }}>Precio Custom (Opcional)</label>
+                            <input
+                              type="number"
+                              min="0"
+                              value={item.precio}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setTempServicios(prev => prev.map((x, i) => i === index ? { ...x, precio: val } : x));
+                              }}
+                              className="login-input"
+                              style={{ padding: "6px 8px", margin: 0, fontSize: "13px" }}
+                              placeholder="Heredar base"
+                            />
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <label style={{ fontSize: "11px", color: "var(--color-text-muted)", display: "block", marginBottom: "2px" }}>Duración Custom (Opcional)</label>
+                            <select
+                              value={item.duracion}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setTempServicios(prev => prev.map((x, i) => i === index ? { ...x, duracion: val } : x));
+                              }}
+                              className="login-input"
+                              style={{ padding: "6px 8px", margin: 0, fontSize: "13px", height: "auto" }}
+                            >
+                              <option value="">Heredar base</option>
+                              <option value="15">15 min</option>
+                              <option value="30">30 min</option>
+                              <option value="45">45 min</option>
+                              <option value="60">60 min</option>
+                              <option value="90">90 min</option>
+                              <option value="120">120 min</option>
+                            </select>
+                          </div>
+                        </div>
                       )}
                     </div>
                   ))

@@ -23,6 +23,13 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE configs (
+    id SERIAL PRIMARY KEY,
+    porcentaje_salon NUMERIC(5, 2) DEFAULT 0.0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE barberos (
     id SERIAL PRIMARY KEY,
     user_id INTEGER UNIQUE NOT NULL,
@@ -35,6 +42,7 @@ CREATE TABLE barberos (
 CREATE TABLE servicios (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
+    precio_base NUMERIC(10, 2) NOT NULL,
     duracion INTEGER NOT NULL,
     active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -45,7 +53,8 @@ CREATE TABLE barbero_servicios (
     id SERIAL PRIMARY KEY,
     barbero_id INTEGER NOT NULL,
     servicio_id INTEGER NOT NULL,
-    precio NUMERIC(10, 2) NOT NULL,
+    precio NUMERIC(10, 2), -- NULL significa que hereda precio_base + % del salón
+    duracion INTEGER, -- NULL significa que hereda duracion de servicios
     active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

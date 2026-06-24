@@ -37,6 +37,7 @@ barberia/
 │   │   ├── controllers/
 │   │   │   ├── authController.js
 │   │   │   ├── barberoController.js
+│   │   │   ├── configController.js
 │   │   │   ├── servicioController.js
 │   │   │   └── turnoController.js
 │   │   ├── middlewares/
@@ -45,17 +46,20 @@ barberia/
 │   │   ├── models/
 │   │   │   ├── Barbero.js
 │   │   │   ├── ClienteInvitado.js
+│   │   │   ├── Config.js
 │   │   │   ├── Servicio.js
 │   │   │   ├── Turno.js
 │   │   │   └── User.js
 │   │   ├── repositories/
 │   │   │   ├── authRepository.js
 │   │   │   ├── barberoRepository.js
+│   │   │   ├── configRepository.js
 │   │   │   ├── servicioRepository.js
 │   │   │   └── turnoRepository.js
 │   │   ├── routes/
 │   │   │   ├── auth.js
 │   │   │   ├── barberos.js
+│   │   │   ├── config.js
 │   │   │   ├── servicios.js
 │   │   │   └── turnos.js
 │   │   ├── services/
@@ -103,9 +107,12 @@ barberia/
 │   │   │   │   ├── AdminServicios/
 │   │   │   │   │   ├── AdminServicios.jsx
 │   │   │   │   │   └── AdminServicios.css
-│   │   │   │   └── AdminTurnos/
-│   │   │   │       ├── AdminTurnos.jsx
-│   │   │   │       └── AdminTurnos.css
+│   │   │   │   ├── AdminTurnos/
+│   │   │   │   │   ├── AdminTurnos.jsx
+│   │   │   │   │   └── AdminTurnos.css
+│   │   │   │   └── AdminConfig/
+│   │   │   │       ├── AdminConfig.jsx
+│   │   │   │       └── AdminConfig.css
 │   │   │   ├── barbero/
 │   │   │   │   └── BarberoAgenda/
 │   │   │   │       ├── BarberoAgenda.jsx
@@ -233,4 +240,8 @@ npm run dev:frontend
 - `GET /cliente/:id` - Listar historial de reservas de un cliente.
 - `DELETE /:id` - Cancelar una reserva.
 - `PATCH /:id/completar` - Marcar reserva como completada.
+
+### Config - `/api/config`
+- `GET /` - Obtener configuración global del salón (porcentaje de recargo).
+- `PUT /` - Actualizar porcentaje de recargo del salón (requiere Rol Admin).
 #   B a r b A p p

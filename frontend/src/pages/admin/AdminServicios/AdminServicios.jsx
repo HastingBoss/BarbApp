@@ -24,14 +24,14 @@ export default function AdminServicios() {
   // Form for new service
   const { values: newValues, handleChange: handleNewChange, reset: resetNew } = useForm({
     nombre: "",
-    precio: "",
+    precioBase: "",
     duracion: "30",
   });
 
   // Form for editing service
   const [editValues, setEditValues] = useState({
     nombre: "",
-    precio: "",
+    precioBase: "",
     duracion: "",
   });
 
@@ -48,7 +48,7 @@ export default function AdminServicios() {
     crearServicio(async () => {
       await api.post("/servicios", {
         nombre: newValues.nombre,
-        precio: Number(newValues.precio),
+        precioBase: Number(newValues.precioBase),
         duracion: Number(newValues.duracion),
       });
       resetNew();
@@ -61,7 +61,7 @@ export default function AdminServicios() {
     setSelectedServicio(servicio);
     setEditValues({
       nombre: servicio.nombre,
-      precio: servicio.precio,
+      precioBase: servicio.precioBase,
       duracion: servicio.duracion,
     });
     setActiveModal("edit");
@@ -77,7 +77,7 @@ export default function AdminServicios() {
     actualizarServicio(async () => {
       await api.put(`/servicios/${selectedServicio._id}`, {
         nombre: editValues.nombre,
-        precio: Number(editValues.precio),
+        precioBase: Number(editValues.precioBase),
         duracion: Number(editValues.duracion),
       });
       setActiveModal(null);
@@ -141,7 +141,7 @@ export default function AdminServicios() {
               <thead>
                 <tr>
                   <th className="servicios-th">Nombre</th>
-                  <th className="servicios-th">Precio</th>
+                  <th className="servicios-th">Precio Base</th>
                   <th className="servicios-th">Duración</th>
                   <th className="servicios-th">Estado</th>
                   <th className="servicios-th">Acciones</th>
@@ -151,7 +151,7 @@ export default function AdminServicios() {
                 {servicios.map((s) => (
                   <tr key={s._id} className="servicios-tr">
                     <td className="servicios-td" data-label="Nombre"><strong>{s.nombre}</strong></td>
-                    <td className="servicios-td" data-label="Precio">${s.precio}</td>
+                    <td className="servicios-td" data-label="Precio Base">${s.precioBase}</td>
                     <td className="servicios-td" data-label="Duración">{s.duracion} min</td>
                     <td className="servicios-td" data-label="Estado">
                       <span className={`dashboard-badge ${s.active ? "dashboard-badge-completado" : "dashboard-badge-cancelado"}`}>
@@ -211,14 +211,14 @@ export default function AdminServicios() {
                 />
               </div>
               <div className="login-form-group">
-                <label htmlFor="create-precio">Precio ($)</label>
+                <label htmlFor="create-precio">Precio Base ($)</label>
                 <input
                   id="create-precio"
                   type="number"
-                  name="precio"
+                  name="precioBase"
                   required
                   min="0"
-                  value={newValues.precio}
+                  value={newValues.precioBase}
                   onChange={handleNewChange}
                   placeholder="2500"
                   className="login-input"
@@ -273,14 +273,14 @@ export default function AdminServicios() {
                 />
               </div>
               <div className="login-form-group">
-                <label htmlFor="edit-precio">Precio ($)</label>
+                <label htmlFor="edit-precio">Precio Base ($)</label>
                 <input
                   id="edit-precio"
                   type="number"
-                  name="precio"
+                  name="precioBase"
                   required
                   min="0"
-                  value={editValues.precio}
+                  value={editValues.precioBase}
                   onChange={handleEditChange}
                   className="login-input"
                 />

@@ -2,13 +2,14 @@
 
 ## Resumen de la Estructura Actual
 
-La base de datos se estructura en 6 colecciones principales: 
+La base de datos se estructura en 7 colecciones principales: 
 - `users` almacena las cuentas de usuario con roles diferenciados (`admin`, `barbero`, `cliente`).
 - `barberos` mantiene los perfiles de cada profesional vinculados a un usuario.
-- `servicios` define los tratamientos disponibles y sus duraciones estimadas.
-- `barbero_servicios` asocia cada barbero con los servicios que ofrece asignando un precio personalizado (relación muchos a muchos con atributos).
+- `servicios` define los tratamientos disponibles, sus duraciones base y su precio base general.
+- `barbero_servicios` asocia cada barbero con los servicios que ofrece, permitiendo establecer un precio y duración personalizados (opcionales).
 - `cliente_invitados` registra datos de contacto de clientes sin cuenta que reservan en la plataforma.
 - `turnos` consolida las reservas vinculando el barbero, la relación específica de barbero-servicio con su precio, el cliente (registrado o invitado de forma polimórfica) y el estado del turno (`pendiente`, `cancelado`, `completado`).
+- `configs` gestiona la configuración del salón (porcentaje de recargo).
 
 ---
 
@@ -31,6 +32,13 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE configs (
+    id SERIAL PRIMARY KEY,
+    porcentaje_salon NUMERIC(5, 2) DEFAULT 0.0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE barberos (
     id SERIAL PRIMARY KEY,
     user_id INTEGER UNIQUE NOT NULL,
@@ -43,6 +51,7 @@ CREATE TABLE barberos (
 CREATE TABLE servicios (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
+    precio_base NUMERIC(10, 2) NOT NULL,
     duracion INTEGER NOT NULL, -- en minutos
     active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -53,7 +62,8 @@ CREATE TABLE barbero_servicios (
     id SERIAL PRIMARY KEY,
     barbero_id INTEGER NOT NULL,
     servicio_id INTEGER NOT NULL,
-    precio NUMERIC(10, 2) NOT NULL,
+    precio NUMERIC(10, 2), -- NULL significa que hereda precio_base + %
+    duracion INTEGER, -- NULL significa que hereda duracion de servicios
     active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

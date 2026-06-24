@@ -1,18 +1,31 @@
 const Barbero = require("../models/Barbero");
 const BarberoServicio = require("../models/BarberoServicio");
 
+const configRepository = require("./configRepository");
+
 async function attachRelationsToBarbero(barbero) {
   if (!barbero) return null;
   
+  const config = await configRepository.getConfig();
+  const porcentaje = config.porcentajeSalon || 0;
+
   // Attach services
   const docs = await BarberoServicio.find({ barbero: barbero._id, active: true }).populate("servicio");
   const servicios = docs.map(d => {
     if (!d.servicio) return null;
+    
+    const base = d.servicio.precioBase || 0;
+    const finalPrecio = d.precio !== undefined && d.precio !== null 
+      ? d.precio 
+      : Math.round(base * (1 + porcentaje / 100) * 100) / 100;
+      
+    const finalDuracion = d.duracion || d.servicio.duracion || 0;
+
     return {
       _id: d.servicio._id,
       nombre: d.servicio.nombre,
-      duracion: d.servicio.duracion,
-      precio: d.precio,
+      duracion: finalDuracion,
+      precio: finalPrecio,
       barberoServicioId: d._id
     };
   }).filter(Boolean);

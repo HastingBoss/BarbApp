@@ -42,11 +42,13 @@ const turnoController = {
 
       const servicio = barberoServicio.servicio;
 
+      const duracionEfectiva = barberoServicio.duracion || servicio.duracion;
+
       // Verifica que el horario esté disponible
       const horariosDisponibles = await disponibilidadService.getHorariosDisponibles(
         barbero,
         fecha,
-        servicio.duracion
+        duracionEfectiva
       );
       if (!horariosDisponibles.includes(horaInicio)) {
         throw ServerError.conflict("El horario seleccionado no está disponible");
@@ -263,7 +265,7 @@ const turnoController = {
       const lineasTurnos = turnos.map((t) => {
         const clienteNombre = t.cliente ? (t.cliente.name || t.cliente.nombre) : "Invitado";
         const servicioNombre = t.barberoServicio?.servicio ? t.barberoServicio.servicio.nombre : "Servicio Desconocido";
-        const servicioDuracion = t.barberoServicio?.servicio ? t.barberoServicio.servicio.duracion : 0;
+        const servicioDuracion = t.barberoServicio ? (t.barberoServicio.duracion || t.barberoServicio.servicio?.duracion || 0) : 0;
         return `${t.horaInicio} → ${clienteNombre} — ${servicioNombre} (${servicioDuracion} min) [${t.estado}]`;
       });
 
@@ -273,7 +275,7 @@ const turnoController = {
         const t2 = turnos[i + 1];
 
         const t1Inicio = timeToMinutes(t1.horaInicio);
-        const t1Duracion = t1.barberoServicio?.servicio ? t1.barberoServicio.servicio.duracion : 0;
+        const t1Duracion = t1.barberoServicio ? (t1.barberoServicio.duracion || t1.barberoServicio.servicio?.duracion || 0) : 0;
         const t1Fin = t1Inicio + t1Duracion;
 
         const t2Inicio = timeToMinutes(t2.horaInicio);

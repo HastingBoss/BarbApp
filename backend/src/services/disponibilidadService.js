@@ -34,11 +34,11 @@ const disponibilidadService = {
     // Todos los barberos trabajan de lunes a sábado de 09:00 a 20:00
     if (diaNombre === "domingo") return []; // cerrado los domingos
 
-    // Todos los slots posibles del día
+    // Todos los slots posibles del día (grilla fija de 30 minutos)
     const todosSlots = generarSlots(
       "09:00",
       "20:00",
-      duracionServicio
+      30
     );
 
     // Turnos ya reservados ese día
@@ -50,8 +50,11 @@ const disponibilidadService = {
     // Bloquea slots que colisionen con turnos existentes
     const slotsOcupados = new Set();
     for (const turno of turnosExistentes) {
+      const bServ = turno.barberoServicio;
+      const turnoDuracion = bServ?.duracion || bServ?.servicio?.duracion || 0;
       const inicioOcupado = toMinutes(turno.horaInicio);
-      const finOcupado = inicioOcupado + (turno.barberoServicio?.servicio?.duracion || 0);
+      const finOcupado = inicioOcupado + turnoDuracion;
+      
       // Cualquier slot que se superponga queda bloqueado
       for (const slot of todosSlots) {
         const inicioSlot = toMinutes(slot);

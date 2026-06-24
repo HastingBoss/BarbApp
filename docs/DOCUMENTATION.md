@@ -18,11 +18,11 @@ Esto se logra eliminando por completo el uso de arrays de objetos o subdocumento
 
 3. **Servicio (Colección `Servicio`)**
    - Representa la tabla `servicios`.
-   - Contiene el catálogo general de servicios (`nombre`, `duracion`, `active`). El precio fue extraído al no ser global.
+   - Contiene el catálogo general de servicios (`nombre`, `precioBase`, `duracion`, `active`).
 
 4. **BarberoServicio (Colección `BarberoServicio`)**
    - Representa la tabla de unión/intersección `barbero_servicios` para modelar la relación Muchos a Muchos entre `Barbero` y `Servicio`.
-   - Contiene claves foráneas hacia `barberos` y `servicios`, además de un atributo propio `precio`.
+   - Contiene claves foráneas hacia `barberos` y `servicios`, además de atributos opcionales de anulación (`precio` y `duracion`).
 
 5. **ClienteInvitado (Colección `ClienteInvitado`)**
    - Representa la tabla `cliente_invitados` para almacenar de forma simple los datos de contacto de clientes no registrados.
@@ -31,3 +31,7 @@ Esto se logra eliminando por completo el uso de arrays de objetos o subdocumento
    - Representa la tabla `turnos`.
    - Contiene claves foráneas hacia `barberos` (`barbero_id`) y `barbero_servicios` (`barbero_servicio_id`).
    - El cliente se almacena de forma polimórfica (`cliente` + `clienteModel`), lo cual en SQL se implementa típicamente mediante dos columnas (`cliente_id` y `cliente_type`) o una tabla base común.
+
+7. **Config (Colección `Config`)**
+   - Representa la tabla `configs`.
+   - Almacena variables globales del salón (`porcentajeSalon`).

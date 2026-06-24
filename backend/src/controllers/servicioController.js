@@ -23,11 +23,12 @@ const servicioController = {
 
   async create(req, res, next) {
     try {
-      const { nombre, precio, duracion } = req.body;
-      if (!nombre || precio == null || !duracion) {
-        throw ServerError.badRequest("nombre, precio y duracion son requeridos");
+      const { nombre, precioBase, precio, duracion } = req.body;
+      const finalPrecioBase = precioBase !== undefined ? precioBase : precio;
+      if (!nombre || finalPrecioBase == null || !duracion) {
+        throw ServerError.badRequest("nombre, precioBase y duracion son requeridos");
       }
-      const servicio = await servicioRepository.create({ nombre, precio, duracion });
+      const servicio = await servicioRepository.create({ nombre, precioBase: finalPrecioBase, duracion });
       res.status(201).json(servicio);
     } catch (err) {
       next(err);

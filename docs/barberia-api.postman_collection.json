@@ -1041,6 +1041,64 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Config",
+      "description": "Endpoints para acceder y modificar las variables globales de configuración del negocio (porcentaje del salón).",
+      "item": [
+        {
+          "name": "GET /api/config",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "config"
+              ]
+            },
+            "description": "Devuelve el objeto de configuración actual (porcentaje de recargo del salón)."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/config",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"porcentajeSalon\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "config"
+              ]
+            },
+            "description": "Actualiza el porcentaje de recargo del salón en la base de datos (Solo Administrador)."
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [

@@ -3,6 +3,7 @@ const authRepository = require("../repositories/authRepository");
 const ServerError = require("../utils/ServerError");
 const bcrypt = require("bcrypt");
 const turnoRepository = require("../repositories/turnoRepository");
+const configRepository = require("../repositories/configRepository");
 
 const barberoController = {
   async getAll(req, res, next) {
@@ -118,10 +119,19 @@ const barberoController = {
       let ingresoEstimado = 0;
       const serviciosMap = {};
 
+      const config = await configRepository.getConfig();
+      const porcentaje = config.porcentajeSalon || 0;
+
       for (const t of turnos) {
-        if (t.servicio) {
-          ingresoEstimado += t.servicio.precio || 0;
-          const nombreServicio = t.servicio.nombre;
+        const bServ = t.barberoServicio;
+        if (bServ) {
+          const base = bServ.servicio?.precioBase || 0;
+          const finalPrecio = bServ.precio !== undefined && bServ.precio !== null 
+            ? bServ.precio 
+            : Math.round(base * (1 + porcentaje / 100) * 100) / 100;
+
+          ingresoEstimado += finalPrecio;
+          const nombreServicio = bServ.servicio?.nombre || "Servicio Desconocido";
           serviciosMap[nombreServicio] = (serviciosMap[nombreServicio] || 0) + 1;
         }
       }
