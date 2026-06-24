@@ -1,12 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../../utils/api";
 import useRequest from "../../../hooks/useRequest";
+import ConfirmationModal from "../../../components/ConfirmationModal/ConfirmationModal";
 import "./AdminTurnos.css";
 
 export default function AdminTurnos() {
   const { sendRequest: fetchTurnos, response: turnosResponse, loading: loadingTurnos } = useRequest();
   const { sendRequest: completarTurno, loading: completandoTurno, error: completarError } = useRequest();
   const { sendRequest: cancelarTurno, loading: cancelandoTurno, error: cancelarError } = useRequest();
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    onConfirm: null,
+  });
 
   const loadTurnos = () => {
     fetchTurnos(() => api.get("/turnos"));
@@ -17,21 +24,33 @@ export default function AdminTurnos() {
   }, []);
 
   const handleCompletar = (id) => {
-    if (window.confirm("¿Marcar este turno como completado?")) {
-      completarTurno(async () => {
-        await api.patch(`/turnos/${id}/completar`);
-        loadTurnos();
-      });
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: "Completar Turno",
+      message: "¿Marcar este turno como completado?",
+      onConfirm: () => {
+        completarTurno(async () => {
+          await api.patch(`/turnos/${id}/completar`);
+          loadTurnos();
+        });
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+      },
+    });
   };
 
   const handleCancelar = (id) => {
-    if (window.confirm("¿Seguro de que querés cancelar este turno?")) {
-      cancelarTurno(async () => {
-        await api.delete(`/turnos/${id}`);
-        loadTurnos();
-      });
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: "Cancelar Turno",
+      message: "¿Seguro de que querés cancelar este turno?",
+      onConfirm: () => {
+        cancelarTurno(async () => {
+          await api.delete(`/turnos/${id}`);
+          loadTurnos();
+        });
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+      },
+    });
   };
 
   const turnos = turnosResponse || [];
@@ -105,14 +124,14 @@ export default function AdminTurnos() {
                                 className="btn btn-sm"
                                 disabled={completandoTurno}
                               >
-                                ✅ Completar
+                                Completar
                               </button>
                               <button
                                 onClick={() => handleCancelar(t._id)}
                                 className="btn btn-danger btn-sm"
                                 disabled={cancelandoTurno}
                               >
-                                ❌ Cancelar
+                                Cancelar
                               </button>
                             </div>
                           )}
@@ -125,6 +144,13 @@ export default function AdminTurnos() {
           )}
         </div>
       )}
+      <ConfirmationModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 }

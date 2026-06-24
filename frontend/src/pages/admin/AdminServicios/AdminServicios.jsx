@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../../../utils/api";
 import useRequest from "../../../hooks/useRequest";
 import { useForm } from "../../../hooks/useForm";
+import ConfirmationModal from "../../../components/ConfirmationModal/ConfirmationModal";
 import "./AdminServicios.css";
 
 export default function AdminServicios() {
@@ -10,6 +11,12 @@ export default function AdminServicios() {
   const { sendRequest: actualizarServicio, loading: actualizandoServicio, error: actualizarServicioError } = useRequest();
   const { sendRequest: eliminarServicio, loading: eliminandoServicio, error: eliminarServicioError } = useRequest();
   const { sendRequest: reactivarServicio, loading: reactivandoServicio, error: reactivarServicioError } = useRequest();
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    onConfirm: null,
+  });
 
   const [activeModal, setActiveModal] = useState(null); // 'create' | 'edit' | null
   const [selectedServicio, setSelectedServicio] = useState(null);
@@ -79,12 +86,18 @@ export default function AdminServicios() {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("¿Estás seguro de que querés eliminar este servicio?")) {
-      eliminarServicio(async () => {
-        await api.delete(`/servicios/${id}`);
-        loadServicios();
-      });
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: "Eliminar Servicio",
+      message: "¿Estás seguro de que querés eliminar este servicio?",
+      onConfirm: () => {
+        eliminarServicio(async () => {
+          await api.delete(`/servicios/${id}`);
+          loadServicios();
+        });
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+      },
+    });
   };
 
   const handleReactivate = (servicio) => {
@@ -102,7 +115,7 @@ export default function AdminServicios() {
       <div className="servicios-header">
         <h1>Gestión de <span>Servicios</span></h1>
         <button onClick={() => setActiveModal("create")} className="btn">
-          ➕ Nuevo Servicio
+          Nuevo Servicio
         </button>
       </div>
 
@@ -148,7 +161,7 @@ export default function AdminServicios() {
                     <td className="servicios-td" data-label="Acciones">
                       <div className="actions-cell">
                         <button onClick={() => openEditModal(s)} className="btn btn-secondary btn-sm">
-                          ✏️ Editar
+                          Editar
                         </button>
                         {s.active ? (
                           <button
@@ -156,7 +169,7 @@ export default function AdminServicios() {
                             className="btn btn-danger btn-sm"
                             disabled={eliminandoServicio}
                           >
-                            🗑️ Eliminar
+                            Eliminar
                           </button>
                         ) : (
                           <button
@@ -164,7 +177,7 @@ export default function AdminServicios() {
                             className="btn btn-sm"
                             disabled={reactivandoServicio}
                           >
-                            🔄 Activar
+                            Activar
                           </button>
                         )}
                       </div>
@@ -300,6 +313,13 @@ export default function AdminServicios() {
           </div>
         </div>
       )}
+      <ConfirmationModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 }

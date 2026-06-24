@@ -2,12 +2,19 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { api } from "../../../utils/api";
 import useRequest from "../../../hooks/useRequest";
+import ConfirmationModal from "../../../components/ConfirmationModal/ConfirmationModal";
 import "./ClienteHistorial.css";
 
 export default function ClienteHistorial() {
   const { user } = useAuth();
   const turnosRequest = useRequest();
   const actionRequest = useRequest();
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    onConfirm: null,
+  });
 
 
   const loadTurnos = () => {
@@ -21,12 +28,18 @@ export default function ClienteHistorial() {
   }, [user]);
 
   const handleCancelar = (id) => {
-    if (window.confirm("¿Seguro de que querés cancelar este turno?")) {
-      actionRequest.sendRequest(async () => {
-        await api.delete(`/turnos/${id}`);
-        loadTurnos();
-      });
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: "Cancelar Turno",
+      message: "¿Seguro de que querés cancelar este turno?",
+      onConfirm: () => {
+        actionRequest.sendRequest(async () => {
+          await api.delete(`/turnos/${id}`);
+          loadTurnos();
+        });
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+      },
+    });
   };
 
   const getFormattedDate = (dateStr) => {
@@ -113,6 +126,13 @@ export default function ClienteHistorial() {
           )}
         </div>
       )}
+      <ConfirmationModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 }

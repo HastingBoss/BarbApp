@@ -1,13 +1,22 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../../../context/AuthContext";
 import { api } from "../../../utils/api";
 import useRequest from "../../../hooks/useRequest";
+import ConfirmationModal from "../../../components/ConfirmationModal/ConfirmationModal";
 import "./BarberoAgenda.css";
 
 export default function BarberoAgenda() {
+  const { user } = useAuth();
   const profileRequest = useRequest();
   const turnosRequest = useRequest();
   const actionRequest = useRequest();
   const resumenRequest = useRequest();
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    onConfirm: null,
+  });
 
   const [barberoProfile, setBarberoProfile] = useState(null);
   const barberoId = barberoProfile?._id;
@@ -24,11 +33,6 @@ export default function BarberoAgenda() {
   const [disponibilidadHoras, setDisponibilidadHoras] = useState([]);
   const [modalError, setModalError] = useState("");
   const [modalSubmitting, setModalSubmitting] = useState(false);
-
-  const [pendientes, setPendientes] = useState([]);
-  const [rejectingTurnoId, setRejectingTurnoId] = useState(null);
-  const [motivoRechazo, setMotivoRechazo] = useState("");
-  const [showRejectModal, setShowRejectModal] = useState(false);
 
   const getTodayString = () => {
     const hoy = new Date();
@@ -133,12 +137,18 @@ export default function BarberoAgenda() {
   }, [barberoId]);
 
   const handleCompletar = (id) => {
-    if (window.confirm("¿Marcar este turno como completado?")) {
-      actionRequest.sendRequest(async () => {
-        await api.patch(`/turnos/${id}/completar`);
-        loadTurnos();
-      });
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: "Completar Turno",
+      message: "¿Marcar este turno como completado?",
+      onConfirm: () => {
+        actionRequest.sendRequest(async () => {
+          await api.patch(`/turnos/${id}/completar`);
+          loadTurnos();
+        });
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+      },
+    });
   };
 
   const toggleResumen = () => {
@@ -172,10 +182,10 @@ export default function BarberoAgenda() {
         {barberoId && (
           <div style={{ display: "flex", gap: "10px" }}>
             <button onClick={() => setShowManualModal(true)} className="btn">
-              ➕ Nuevo Turno Manual
+              Nuevo Turno Manual
             </button>
             <button onClick={toggleResumen} className="btn btn-secondary">
-              {showResumen ? " ocultar Resumen" : "📋 Resumen del Día"}
+              {showResumen ? " Ocultar Resumen" : "Resumen del Día"}
             </button>
           </div>
         )}
@@ -398,7 +408,13 @@ export default function BarberoAgenda() {
           </div>
         </div>
       )}
-
+      <ConfirmationModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 }

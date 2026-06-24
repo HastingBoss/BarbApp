@@ -129,7 +129,7 @@ export default function AdminBarberos() {
       <div className="barberos-header">
         <h1>Gestión de <span>Barberos</span></h1>
         <button onClick={() => setActiveModal("create")} className="btn">
-          ➕ Nuevo Barbero
+          Nuevo Barbero
         </button>
       </div>
 
@@ -174,7 +174,7 @@ export default function AdminBarberos() {
                   <td className="barberos-td" data-label="Acciones">
                     <div className="actions-cell">
                       <button onClick={() => openServiciosModal(b)} className="btn btn-secondary btn-sm">
-                        ✂️ Servicios
+                        Servicios
                       </button>
                       <button
                         onClick={() => toggleBarberoStatus(b)}
