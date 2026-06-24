@@ -18,12 +18,4 @@ router.put("/:id", authenticate, authorize("admin"), barberoController.updateByI
 router.put("/:id/servicios", authenticate, authorize("admin"), barberoController.updateServicios);
 router.get("/:id/metricas", authenticate, authorize("admin"), barberoController.getMetricas);
 
-// Admin o el propio barbero
-router.put(
-  "/:id/horarios",
-  authenticate,
-  authorize("admin", "barbero"),
-  barberoController.updateHorarios
-);
-
 module.exports = router;

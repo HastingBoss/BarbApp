@@ -4,37 +4,20 @@ import useRequest from "../../../hooks/useRequest";
 import { useForm } from "../../../hooks/useForm";
 import "./AdminBarberos.css";
 
-const DAYS_OF_WEEK = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
 
-function generarOpciones() {
-  const opciones = []
-  for (let h = 6; h <= 22; h++) {
-    for (let m of [0, 30]) {
-      const hora = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
-      opciones.push(hora)
-    }
-  }
-  return opciones
-}
-
-const opcionesHora = generarOpciones();
 
 export default function AdminBarberos() {
   const { sendRequest: fetchBarberos, response: barberosResponse, loading: loadingBarberos } = useRequest();
   const { sendRequest: fetchServicios, response: serviciosResponse, loading: loadingServicios } = useRequest();
   const { sendRequest: crearBarbero, loading: creandoBarbero, error: crearBarberoError } = useRequest();
-  const { sendRequest: actualizarHorarios, loading: actualizandoHorarios, error: actualizarHorariosError } = useRequest();
   const { sendRequest: actualizarEstado, loading: actualizandoEstado, error: actualizarEstadoError } = useRequest();
 
   const [actualizandoServicios, setActualizandoServicios] = useState(false);
   const [actualizarServiciosError, setActualizarServiciosError] = useState("");
   const [loadingServiciosRelations, setLoadingServiciosRelations] = useState(false);
 
-  const [activeModal, setActiveModal] = useState(null); // 'create' | 'horarios' | 'servicios' | null
+  const [activeModal, setActiveModal] = useState(null); // 'create' | 'servicios' | null
   const [selectedBarbero, setSelectedBarbero] = useState(null);
-
-  // For horarios modal
-  const [tempHorarios, setTempHorarios] = useState([]);
   // For servicios modal
   const [tempServicios, setTempServicios] = useState([]);
 
@@ -63,45 +46,7 @@ export default function AdminBarberos() {
     });
   };
 
-  const openHorariosModal = (barbero) => {
-    setSelectedBarbero(barbero);
-    const mapped = DAYS_OF_WEEK.map((d) => {
-      const match = barbero.horarios?.find((h) => h.dia === d);
-      return {
-        dia: d,
-        horaInicio: match ? match.horaInicio : "09:00",
-        horaFin: match ? match.horaFin : "18:00",
-        active: !!match,
-      };
-    });
-    setTempHorarios(mapped);
-    setActiveModal("horarios");
-  };
 
-  const handleHorarioCheckboxChange = (index) => {
-    setTempHorarios((prev) =>
-      prev.map((h, i) => (i === index ? { ...h, active: !h.active } : h))
-    );
-  };
-
-  const handleHorarioTimeChange = (index, field, value) => {
-    setTempHorarios((prev) =>
-      prev.map((h, i) => (i === index ? { ...h, [field]: value } : h))
-    );
-  };
-
-  const saveHorarios = (e) => {
-    e.preventDefault();
-    const payload = tempHorarios
-      .filter((h) => h.active)
-      .map(({ dia, horaInicio, horaFin }) => ({ dia, horaInicio, horaFin }));
-
-    actualizarHorarios(async () => {
-      await api.put(`/barberos/${selectedBarbero._id}/horarios`, { horarios: payload });
-      setActiveModal(null);
-      loadData();
-    });
-  };
 
   const openServiciosModal = async (barbero) => {
     setSelectedBarbero(barbero);
@@ -177,7 +122,7 @@ export default function AdminBarberos() {
 
   const barberos = barberosResponse || [];
   const servicios = serviciosResponse || [];
-  const currentError = crearBarberoError || actualizarHorariosError || actualizarServiciosError || actualizarEstadoError;
+  const currentError = crearBarberoError || actualizarServiciosError || actualizarEstadoError;
 
   return (
     <div>
@@ -207,7 +152,6 @@ export default function AdminBarberos() {
                 <th className="barberos-th">Nombre</th>
                 <th className="barberos-th">Email</th>
                 <th className="barberos-th">Servicios</th>
-                <th className="barberos-th">Horarios</th>
                 <th className="barberos-th">Estado</th>
                 <th className="barberos-th">Acciones</th>
               </tr>
@@ -222,11 +166,6 @@ export default function AdminBarberos() {
                       {b.servicios?.length || 0} servicio(s)
                     </span>
                   </td>
-                  <td className="barberos-td" data-label="Horarios">
-                    <span className="barberos-count-label">
-                      {b.horarios?.length || 0} día(s)
-                    </span>
-                  </td>
                   <td className="barberos-td" data-label="Estado">
                     <span className={`dashboard-badge ${b.active ? "dashboard-badge-completado" : "dashboard-badge-cancelado"}`}>
                       {b.active ? "Activo" : "Inactivo"}
@@ -234,9 +173,6 @@ export default function AdminBarberos() {
                   </td>
                   <td className="barberos-td" data-label="Acciones">
                     <div className="actions-cell">
-                      <button onClick={() => openHorariosModal(b)} className="btn btn-secondary btn-sm">
-                        🗓️ Horarios
-                      </button>
                       <button onClick={() => openServiciosModal(b)} className="btn btn-secondary btn-sm">
                         ✂️ Servicios
                       </button>
@@ -308,66 +244,6 @@ export default function AdminBarberos() {
                 </button>
                 <button type="submit" className="btn" disabled={creandoBarbero}>
                   {creandoBarbero ? "Creando..." : "Crear"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Modal: Editar Horarios */}
-      {activeModal === "horarios" && (
-        <div className="modal-overlay">
-          <div className="modal-content modal-content-lg">
-            <button className="modal-close" onClick={() => setActiveModal(null)}>×</button>
-            <h3>Editar Horarios: {selectedBarbero?.user?.name}</h3>
-            <form onSubmit={saveHorarios}>
-              <div className="modal-scrollable-body">
-                {tempHorarios.map((h, index) => (
-                  <div key={h.dia} className="day-slot-item">
-                    <label className="checkbox-label day-label-wrapper">
-                      <input
-                        type="checkbox"
-                        checked={h.active}
-                        onChange={() => handleHorarioCheckboxChange(index)}
-                      />
-                      <span className="day-text-span">{h.dia}</span>
-                    </label>
-
-                    {h.active && (
-                      <div className="time-inputs-wrapper">
-                        <select
-                          value={h.horaInicio}
-                          onChange={(e) => handleHorarioTimeChange(index, "horaInicio", e.target.value)}
-                          className="hora-select"
-                          required
-                        >
-                          {opcionesHora.map((opt) => (
-                            <option key={opt} value={opt}>{opt}</option>
-                          ))}
-                        </select>
-                        <span className="time-separator">a</span>
-                        <select
-                          value={h.horaFin}
-                          onChange={(e) => handleHorarioTimeChange(index, "horaFin", e.target.value)}
-                          className="hora-select"
-                          required
-                        >
-                          {opcionesHora.map((opt) => (
-                            <option key={opt} value={opt}>{opt}</option>
-                          ))}
-                        </select>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setActiveModal(null)}>
-                  Cancelar
-                </button>
-                <button type="submit" className="btn" disabled={actualizandoHorarios}>
-                  {actualizandoHorarios ? "Guardando..." : "Guardar Horarios"}
                 </button>
               </div>
             </form>

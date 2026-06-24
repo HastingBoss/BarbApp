@@ -19,7 +19,6 @@ async function attachRelationsToBarbero(barbero) {
 
   const obj = barbero.toObject ? barbero.toObject() : barbero;
   obj.servicios = servicios;
-  obj.horarios = obj.horarios || [];
   return obj;
 }
 

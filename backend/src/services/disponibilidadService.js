@@ -31,15 +31,13 @@ const disponibilidadService = {
     const fechaObj = new Date(fecha);
     const diaNombre = DIAS[fechaObj.getDay()]; // 0=domingo, 1=lunes, ...
 
-    // Busca el horario del barbero para ese día
-    const horarios = barbero.horarios || [];
-    const horarioDia = horarios.find((h) => h.dia === diaNombre);
-    if (!horarioDia) return []; // no trabaja ese día
+    // Todos los barberos trabajan de lunes a sábado de 09:00 a 20:00
+    if (diaNombre === "domingo") return []; // cerrado los domingos
 
     // Todos los slots posibles del día
     const todosSlots = generarSlots(
-      horarioDia.horaInicio,
-      horarioDia.horaFin,
+      "09:00",
+      "20:00",
       duracionServicio
     );
 

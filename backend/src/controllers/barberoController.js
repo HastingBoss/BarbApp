@@ -38,7 +38,7 @@ const barberoController = {
   // Admin: crea user con role barbero + perfil Barbero
   async create(req, res, next) {
     try {
-      const { name, email, password, servicios, horarios } = req.body;
+      const { name, email, password, servicios } = req.body;
       if (!name || !email || !password) {
         throw ServerError.badRequest("Nombre, email y contraseña son requeridos");
       }
@@ -58,7 +58,6 @@ const barberoController = {
       const barbero = await barberoRepository.create({
         user: user._id,
         servicios: servicios || [],
-        horarios: horarios || [],
       });
 
       res.status(201).json(barbero);
@@ -70,33 +69,6 @@ const barberoController = {
   async updateById(req, res, next) {
     try {
       const barbero = await barberoRepository.updateById(req.params.id, req.body);
-      if (!barbero) throw ServerError.notFound("Barbero no encontrado");
-      res.json(barbero);
-    } catch (err) {
-      next(err);
-    }
-  },
-
-  // Admin o el propio barbero actualiza sus horarios
-  async updateHorarios(req, res, next) {
-    try {
-      const { horarios } = req.body;
-      if (!Array.isArray(horarios)) {
-        throw ServerError.badRequest("horarios debe ser un array");
-      }
-
-      let barberoId = req.params.id;
-
-      // Si es barbero, solo puede editar su propio perfil
-      if (req.user.role === "barbero") {
-        const miPerfil = await barberoRepository.findByUserId(req.user._id);
-        if (!miPerfil) throw ServerError.notFound("Perfil no encontrado");
-        if (miPerfil._id.toString() !== barberoId) {
-          throw ServerError.forbidden();
-        }
-      }
-
-      const barbero = await barberoRepository.updateById(barberoId, { horarios });
       if (!barbero) throw ServerError.notFound("Barbero no encontrado");
       res.json(barbero);
     } catch (err) {

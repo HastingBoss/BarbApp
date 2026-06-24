@@ -97,11 +97,7 @@ export default function ReservaWizard() {
     if (date < compareToday) return true;
     
     const dayOfWeekIndex = date.getDay();
-    const dayName = MAP_JS_DAY_TO_SPANISH[dayOfWeekIndex];
-    const worksOnDay = seleccion.barbero?.horarios?.some(
-      (h) => h.dia.toLowerCase() === dayName
-    );
-    if (!worksOnDay) return true;
+    if (dayOfWeekIndex === 0) return true; // Domingo cerrado
     
     return false;
   };
