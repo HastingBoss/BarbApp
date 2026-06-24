@@ -1,7 +1,6 @@
 const turnoRepository = require("../repositories/turnoRepository");
 const barberoRepository = require("../repositories/barberoRepository");
 const servicioRepository = require("../repositories/servicioRepository");
-const configRepository = require("../repositories/configRepository");
 const authRepository = require("../repositories/authRepository");
 const barberoServicioRepository = require("../repositories/barberoServicioRepository");
 const ClienteInvitado = require("../models/ClienteInvitado");

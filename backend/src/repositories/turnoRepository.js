@@ -60,24 +60,6 @@ const turnoRepository = {
       .sort({ fecha: -1 });
   },
 
-  // Turnos de hoy para enviar recordatorios al horario de apertura
-  async findTurnosHoy() {
-    const hoy = new Date();
-    const inicioDia = new Date(hoy);
-    inicioDia.setHours(0, 0, 0, 0);
-    const finDia = new Date(hoy);
-    finDia.setHours(23, 59, 59, 999);
-
-    return Turno.find({
-      fecha: { $gte: inicioDia, $lte: finDia },
-      estado: "pendiente",
-      recordatorioEnviado: false,
-    })
-      .populate({ path: "barbero", populate: { path: "user", select: "name" } })
-      .populate({ path: "barberoServicio", populate: { path: "servicio" } })
-      .populate("cliente");
-  },
-
   async findMetricasByBarbero(barberoId, desde, hasta) {
     const inicio = new Date(desde);
     const fin = new Date(hasta);

@@ -43,9 +43,6 @@ export default function Sidebar() {
           <NavLink to="/admin/turnos" onClick={closeMenu} className={({ isActive }) => `sidebar-item ${isActive ? "active" : ""}`}>
             Turnos
           </NavLink>
-          <NavLink to="/admin/config" onClick={closeMenu} className={({ isActive }) => `sidebar-item ${isActive ? "active" : ""}`}>
-            Configuración
-          </NavLink>
 
           {user && (
             <div className="sidebar-user">

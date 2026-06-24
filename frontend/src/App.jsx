@@ -17,7 +17,6 @@ import AdminDashboard from "./pages/admin/AdminDashboard/AdminDashboard"
 import AdminBarberos from "./pages/admin/AdminBarberos/AdminBarberos"
 import AdminServicios from "./pages/admin/AdminServicios/AdminServicios"
 import AdminTurnos from "./pages/admin/AdminTurnos/AdminTurnos"
-import AdminConfig from "./pages/admin/AdminConfig/AdminConfig"
 import BarberoAgenda from "./pages/barbero/BarberoAgenda/BarberoAgenda"
 import ClienteReserva from "./pages/cliente/ClienteReserva/ClienteReserva"
 import ClienteHistorial from "./pages/cliente/ClienteHistorial/ClienteHistorial"
@@ -49,7 +48,6 @@ const App = () => {
               <Route path="/admin/barberos" element={<AdminBarberos />} />
               <Route path="/admin/servicios" element={<AdminServicios />} />
               <Route path="/admin/turnos" element={<AdminTurnos />} />
-              <Route path="/admin/config" element={<AdminConfig />} />
             </Route>
           </Route>
 

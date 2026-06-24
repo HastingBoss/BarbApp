@@ -34,9 +34,6 @@ export default function Layout({ children }) {
           <NavLink to="/admin/turnos" onClick={closeMenu} className={({ isActive }) => `navbar-item ${isActive ? "active" : ""}`}>
             Turnos
           </NavLink>
-          <NavLink to="/admin/config" onClick={closeMenu} className={({ isActive }) => `navbar-item ${isActive ? "active" : ""}`}>
-            Configuración
-          </NavLink>
 
         </>
       );

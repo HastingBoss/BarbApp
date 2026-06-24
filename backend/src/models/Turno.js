@@ -29,7 +29,6 @@ const turnoSchema = new mongoose.Schema(
       default: "pendiente",
     },
     canceladoEn: { type: Date },
-    recordatorioEnviado: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
