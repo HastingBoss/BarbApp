@@ -31,22 +31,10 @@ Esto es una **limitación aceptada** en pos de simplificar la base de datos SQL.
 
 ## 2. Simplificación de Horarios
 
-### En MongoDB
-Se eliminó la colección externa `Horario`. Los horarios semanales ahora viven directamente como un array de subdocumentos embebidos dentro de la colección `Barbero`:
-```js
-horarios: [
-  {
-    dia: { type: String, required: true },
-    horaInicio: { type: String, required: true },
-    horaFin: { type: String, required: true }
-  }
-]
-```
-Esto simplifica significativamente el backend (rutas y controladores), eliminando la necesidad de repositorios intermedios (`horarioRepository.js`).
+### En MongoDB y SQL
+Se eliminó por completo el almacenamiento de horarios en la base de datos (tanto la colección/tabla independiente como los campos embebidos en `Barbero`).
 
-### En SQL
-Debido a que SQL no cuenta con tipos complejos embebidos nativos como los arrays de subdocumentos (salvo soporte JSON específico de algunos motores), un modelo relacional estricto requeriría una tabla separada `horarios` con clave foránea `barbero_id`.
-Sin embargo, para este proyecto escolar, **se documenta esta necesidad pero no se implementa en SQL**, omitiendo la tabla `horarios` por completo para simplificar el entregable.
+La disponibilidad horaria ahora se define a nivel de lógica de negocio en la aplicación con un cronograma semanal fijo estándar (Lunes a Sábado de 09:00 a 20:00, Domingos cerrado). Esto elimina por completo la necesidad de almacenar y sincronizar configuraciones de horarios individuales de cada barbero en la base de datos, simplificando la lógica de disponibilidad y el panel de administración.
 
 ---
 

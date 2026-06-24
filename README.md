@@ -39,8 +39,6 @@ barberia/
 │   │   ├── controllers/
 │   │   │   ├── authController.js
 │   │   │   ├── barberoController.js
-│   │   │   ├── configController.js
-│   │   │   ├── cronController.js
 │   │   │   ├── servicioController.js
 │   │   │   └── turnoController.js
 │   │   ├── middlewares/
@@ -49,25 +47,20 @@ barberia/
 │   │   ├── models/
 │   │   │   ├── Barbero.js
 │   │   │   ├── ClienteInvitado.js
-│   │   │   ├── Config.js
 │   │   │   ├── Servicio.js
 │   │   │   ├── Turno.js
 │   │   │   └── User.js
 │   │   ├── repositories/
 │   │   │   ├── authRepository.js
 │   │   │   ├── barberoRepository.js
-│   │   │   ├── configRepository.js
 │   │   │   ├── servicioRepository.js
 │   │   │   └── turnoRepository.js
 │   │   ├── routes/
 │   │   │   ├── auth.js
 │   │   │   ├── barberos.js
-│   │   │   ├── config.js
-│   │   │   ├── cron.js
 │   │   │   ├── servicios.js
 │   │   │   └── turnos.js
 │   │   ├── services/
-│   │   │   ├── cronService.js
 │   │   │   ├── disponibilidadService.js
 │   │   │   └── emailService.js
 │   │   ├── utils/
@@ -112,12 +105,9 @@ barberia/
 │   │   │   │   ├── AdminServicios/
 │   │   │   │   │   ├── AdminServicios.jsx
 │   │   │   │   │   └── AdminServicios.css
-│   │   │   │   ├── AdminTurnos/
-│   │   │   │   │   ├── AdminTurnos.jsx
-│   │   │   │   │   └── AdminTurnos.css
-│   │   │   │   └── AdminConfig/
-│   │   │   │       ├── AdminConfig.jsx
-│   │   │   │       └── AdminConfig.css
+│   │   │   │   └── AdminTurnos/
+│   │   │   │       ├── AdminTurnos.jsx
+│   │   │   │       └── AdminTurnos.css
 │   │   │   ├── barbero/
 │   │   │   │   └── BarberoAgenda/
 │   │   │   │       ├── BarberoAgenda.jsx
@@ -139,7 +129,7 @@ barberia/
 │   └── vercel.json
 │
 ├── .gitignore
-├── package.json         <- Configuracion de workspaces npm
+│   ├── package.json         <- Configuracion de workspaces npm
 └── README.md
 ```
 
@@ -183,9 +173,6 @@ FRONTEND_URL=http://localhost:5173
 
 # --- Frontend Config ---
 VITE_API_URL=http://localhost:4000/api
-
-# Vercel Cron Jobs
-CRON_SECRET=un_string_secreto_random
 ```
 
 ### 4. Inicializar base de datos y correr servidores
@@ -212,17 +199,6 @@ npm run dev:frontend
 4. Configurar las variables de entorno detalladas anteriormente en el panel de control del proyecto Vercel (Settings -> Environment Variables).
 5. El backend se desplegara como Serverless Functions y el frontend como sitio estatico SPA con soporte de enrutamiento.
 
-### Tareas Programadas (Cron Jobs)
-Como el backend corre en un entorno stateless en Vercel, node-cron no mantiene un proceso en ejecucion. Para disparar recordatorios automaticos de turnos en produccion, se expone un endpoint seguro `GET /api/cron/recordatorios` que se ejecuta a traves de Vercel Cron Jobs configurado en `backend/vercel.json`:
-```json
-"crons": [
-  {
-    "path": "/api/cron/recordatorios",
-    "schedule": "0 9 * * *"
-  }
-]
-```
-
 ---
 
 ## Endpoints de la API
@@ -240,7 +216,6 @@ Como el backend corre en un entorno stateless en Vercel, node-cron no mantiene u
 - `GET /me/perfil` - Obtener datos del barbero logueado (requiere JWT).
 - `POST /` - Crear nuevo barbero (requiere Rol Admin).
 - `PUT /:id` - Editar perfil de barbero (requiere Rol Admin).
-- `PUT /:id/horarios` - Actualizar dias y rangos horarios del barbero.
 - `PUT /:id/servicios` - Asignar lista de servicios al barbero (requiere Rol Admin).
 - `GET /:id/metricas` - Visualizar cantidad de turnos e ingresos (requiere Rol Admin).
 
@@ -260,9 +235,4 @@ Como el backend corre en un entorno stateless en Vercel, node-cron no mantiene u
 - `GET /cliente/:id` - Listar historial de reservas de un cliente.
 - `DELETE /:id` - Cancelar una reserva.
 - `PATCH /:id/completar` - Marcar reserva como completada.
-
-### Config - `/api/config`
-- `GET /` - Obtener configuraciones globales (hora recordatorio).
-- `PUT /` - Actualizar variables globales (requiere Rol Admin).
-#   B a r b A p p  
- 
+#   B a r b A p p

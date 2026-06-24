@@ -73,7 +73,6 @@ CREATE TABLE turnos (
     hora_inicio VARCHAR(5) NOT NULL,
     estado turno_estado DEFAULT 'pendiente',
     cancelado_en TIMESTAMP,
-    recordatorio_enviado BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -81,10 +80,3 @@ CREATE TABLE turnos (
 -- Evita solapamientos para turnos que estén activos (estado 'pendiente')
 CREATE UNIQUE INDEX idx_booking_slot ON turnos (barbero_id, fecha, hora_inicio)
 WHERE estado = 'pendiente';
-
-CREATE TABLE configs (
-    id SERIAL PRIMARY KEY,
-    hora_recordatorio VARCHAR(5) DEFAULT '09:00',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);

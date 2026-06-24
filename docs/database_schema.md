@@ -2,14 +2,13 @@
 
 ## Resumen de la Estructura Actual
 
-La base de datos se estructura en 8 colecciones principales: 
+La base de datos se estructura en 6 colecciones principales: 
 - `users` almacena las cuentas de usuario con roles diferenciados (`admin`, `barbero`, `cliente`).
-- `barberos` mantiene los perfiles de cada profesional vinculados a un usuario, incluyendo sus horarios semanales embebidos.
+- `barberos` mantiene los perfiles de cada profesional vinculados a un usuario.
 - `servicios` define los tratamientos disponibles y sus duraciones estimadas.
 - `barbero_servicios` asocia cada barbero con los servicios que ofrece asignando un precio personalizado (relación muchos a muchos con atributos).
 - `cliente_invitados` registra datos de contacto de clientes sin cuenta que reservan en la plataforma.
 - `turnos` consolida las reservas vinculando el barbero, la relación específica de barbero-servicio con su precio, el cliente (registrado o invitado de forma polimórfica) y el estado del turno (`pendiente`, `cancelado`, `completado`).
-- `configs` gestiona los parámetros globales de la aplicación de manera centralizada (singleton).
 
 ---
 
@@ -79,18 +78,11 @@ CREATE TABLE turnos (
     hora_inicio VARCHAR(5) NOT NULL, -- formato "HH:mm"
     estado turno_estado DEFAULT 'pendiente',
     cancelado_en TIMESTAMP,
-    recordatorio_enviado BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE UNIQUE INDEX idx_booking_slot ON turnos (barbero_id, fecha, hora_inicio) 
 WHERE estado = 'pendiente';
-
-CREATE TABLE configs (
-    id SERIAL PRIMARY KEY,
-    hora_recordatorio VARCHAR(5) DEFAULT '09:00',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+```
 ```
