@@ -11,7 +11,6 @@ Sistema de gestion de turnos para barberias con arquitectura monorepo, que inclu
 - JWT (JsonWebToken)
 - bcrypt
 - Nodemailer
-- node-cron
 - CORS
 - dotenv
 
@@ -24,7 +23,6 @@ Sistema de gestion de turnos para barberias con arquitectura monorepo, que inclu
 
 ### Deploy y Ops
 - Vercel (Configuracion monorepo)
-- Vercel Cron Jobs (para envio de recordatorios)
 
 ---
 
