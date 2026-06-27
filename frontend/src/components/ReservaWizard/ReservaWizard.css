@@ -347,6 +347,12 @@
     box-shadow: none;
   }
 
+  .stepper {
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
   .stepper-desktop {
     display: none;
   }
