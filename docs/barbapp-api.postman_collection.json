@@ -3,7 +3,6 @@
     "_postman_id": "7a3b3a3c-d38a-4933-bfb9-623cf5c77840",
     "name": "BarbApp API",
     "description": "Colección completa de endpoints para la API de BarbApp (Sistema de Gestión de Turnos de Barbería). Desarrollado por Hasting.dev (Luca Guerra). Consulta el archivo README.md y docs/DATABASE_RELATIONAL_DESIGN.md para obtener detalles sobre la arquitectura y la base de datos.",
-
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -419,7 +418,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Corte clásico\",\n  \"duracion\": 30\n}",
+              "raw": "{\n  \"nombre\": \"Corte clásico\",\n  \"precioBase\": 8000,\n  \"duracion\": 30\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -453,7 +452,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Corte + barba\",\n  \"duracion\": 45\n}",
+              "raw": "{\n  \"nombre\": \"Corte + barba\",\n  \"precioBase\": 10000,\n  \"duracion\": 45\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -487,7 +486,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"duracion\": 45\n}",
+              "raw": "{\n  \"precioBase\": 9000,\n  \"duracion\": 45\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -551,7 +550,7 @@
     },
     {
       "name": "Barbero-Servicios",
-      "description": "Endpoints para gestionar la asignación de servicios específicos a cada barbero con sus respectivos precios personalizados.",
+      "description": "Endpoints para gestionar la asignación de servicios específicos a cada barbero con sus respectivas comisiones (porcentajes de recargo) y duraciones personalizadas.",
       "item": [
         {
           "name": "GET /api/barbero-servicios/barbero/:barberoId",
@@ -576,7 +575,7 @@
                 }
               ]
             },
-            "description": "Retorna la lista de servicios que ofrece un barbero específico junto con su precio personalizado."
+            "description": "Retorna la lista de servicios que ofrece un barbero específico junto con su porcentaje de comisión y duración personalizada."
           },
           "response": []
         },
@@ -603,7 +602,7 @@
                 }
               ]
             },
-            "description": "Retorna la lista de barberos que ofrecen un servicio específico junto con sus precios."
+            "description": "Retorna la lista de barberos que ofrecen un servicio específico junto con sus comisiones y duraciones."
           },
           "response": []
         },
@@ -620,7 +619,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"barberoId\": \"60d5ec4b1a4a5c0015b6d5f1\",\n  \"servicioId\": \"60d5ec4b1a4a5c0015b6d5f2\",\n  \"precio\": 3000\n}",
+              "raw": "{\n  \"barberoId\": \"60d5ec4b1a4a5c0015b6d5f1\",\n  \"servicioId\": \"60d5ec4b1a4a5c0015b6d5f2\",\n  \"porcentaje\": 20,\n  \"duracion\": 45\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -637,7 +636,7 @@
                 "barbero-servicios"
               ]
             },
-            "description": "Asigna un servicio a un barbero con un precio personalizado (ej. Senior Barbero: $3000, Junior Barbero: $2200). Solo accesible para Administradores."
+            "description": "Asigna un servicio a un barbero con un porcentaje de comisión (ej. 20%) y duración custom (ej. 45 min). Los barberos pueden activar/desactivar el servicio, pero sólo los Administradores pueden editar la comisión y la duración."
           },
           "response": []
         },
@@ -654,7 +653,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"precio\": 3200\n}",
+              "raw": "{\n  \"porcentaje\": 25,\n  \"duracion\": 60\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -678,7 +677,7 @@
                 }
               ]
             },
-            "description": "Permite al Administrador actualizar el precio personalizado o activar/desactivar la relación barbero-servicio."
+            "description": "Permite al Administrador actualizar el porcentaje de comisión o la duración de la relación barbero-servicio, o activar/desactivar la relación."
           },
           "response": []
         },
