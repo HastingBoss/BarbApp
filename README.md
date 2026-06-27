@@ -1,6 +1,6 @@
 # BarbApp - Sistema de Gestión de Turnos de Barbería
 
-**Desarrollador:** Hasting.dev (Luca Guerra)
+**Desarrollador:** Hasting.dev (Luca Guerra) <!-- test-trigger -->
 
 Sistema de gestión de turnos para barberías con arquitectura monorepo, que incluye un backend en Node.js y un frontend en React estructurado modularmente con hojas de estilo CSS dedicadas por componente.
 
