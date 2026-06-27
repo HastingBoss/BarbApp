@@ -76,20 +76,31 @@ const barberoServicioController = {
     try {
       const barbero = req.body.barbero || req.body.barberoId;
       const servicio = req.body.servicio || req.body.servicioId;
-      const porcentaje = req.body.porcentaje !== undefined ? req.body.porcentaje : req.body.precio;
-      const duracion = req.body.duracion;
+      let porcentaje = req.body.porcentaje !== undefined ? req.body.porcentaje : req.body.precio;
+      let duracion = req.body.duracion;
       if (!barbero || !servicio) {
         throw ServerError.badRequest("barbero y servicio son requeridos");
       }
 
       await checkOwnership(req, barbero, null);
 
+      // Si el rol es barbero, no puede asignar comisión ni duración custom
+      if (req.user.role === "barbero") {
+        porcentaje = undefined;
+        duracion = undefined;
+      }
+
       // Check if combination already exists (even if inactive, we retrieve it to potentially reactivate)
       // Note: findOne returns populated, let's look for active or inactive:
       const existing = await barberoServicioRepository.findOne(barbero, servicio);
       if (existing) {
         if (!existing.active) {
-          const updated = await barberoServicioRepository.updateById(existing._id, { porcentaje, duracion, active: true });
+          const updateData = { active: true };
+          if (req.user.role === "admin") {
+            updateData.porcentaje = porcentaje;
+            updateData.duracion = duracion;
+          }
+          const updated = await barberoServicioRepository.updateById(existing._id, updateData);
           return res.status(200).json(updated);
         }
         throw ServerError.conflict("Esta combinación de barbero y servicio ya existe");
@@ -107,10 +118,13 @@ const barberoServicioController = {
       const { porcentaje, precio, duracion, active } = req.body;
       await checkOwnership(req, null, req.params.id);
 
-      const finalPorcentaje = porcentaje !== undefined ? porcentaje : precio;
       const data = {};
-      if (finalPorcentaje !== undefined) data.porcentaje = finalPorcentaje === "" ? null : finalPorcentaje;
-      if (duracion !== undefined) data.duracion = duracion === "" ? null : duracion;
+      if (req.user.role === "admin") {
+        const finalPorcentaje = porcentaje !== undefined ? porcentaje : precio;
+        if (finalPorcentaje !== undefined) data.porcentaje = finalPorcentaje === "" ? null : finalPorcentaje;
+        if (duracion !== undefined) data.duracion = duracion === "" ? null : duracion;
+      }
+
       if (active !== undefined) data.active = active;
 
       const updated = await barberoServicioRepository.updateById(req.params.id, data);

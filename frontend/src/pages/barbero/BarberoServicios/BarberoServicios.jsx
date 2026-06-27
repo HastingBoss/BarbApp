@@ -118,7 +118,7 @@ export default function BarberoServicios() {
       <div className="barbero-servicios-header">
         <h1>Mis <span>Servicios Habilitados</span></h1>
         <p className="subtitle">
-          Seleccioná qué servicios ofrecés, y personalizá los precios y duraciones si lo considerás necesario.
+          Seleccioná qué servicios ofrecés. La comisión y duración son administradas y configuradas únicamente por el administrador.
         </p>
       </div>
 
@@ -172,14 +172,15 @@ export default function BarberoServicios() {
                           <input
                             type="number"
                             min="0"
-                            placeholder={`Heredar: ${config.porcentajeSalon}% (Cliente: $${baseWithMarkup})`}
+                            placeholder={item.precio !== "" ? `${item.precio}%` : `Heredar: ${config.porcentajeSalon}%`}
                             value={item.precio}
                             onChange={(e) => handleValueChange(index, "precio", e.target.value)}
                             className="login-input"
+                            disabled
+                            style={{ opacity: 0.7, cursor: "not-allowed" }}
                           />
                         </div>
                       </div>
-
 
                       <div className="custom-field">
                         <label>Duración</label>
@@ -187,6 +188,8 @@ export default function BarberoServicios() {
                           value={item.duracion}
                           onChange={(e) => handleValueChange(index, "duracion", e.target.value)}
                           className="login-input"
+                          disabled
+                          style={{ opacity: 0.7, cursor: "not-allowed" }}
                         >
                           <option value="">Heredar: {item.duracionBase} min</option>
                           <option value="15">15 min</option>
