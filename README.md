@@ -235,7 +235,7 @@ npm run dev:frontend
 - `DELETE /:id` - Soft-delete desactivando el servicio (requiere Rol Admin).
 
 ### Turnos - `/api/turnos`
-- `GET /disponibilidad` - Consultar horarios libres filtrando por barbero, servicio y fecha.
+- `GET /disponibilidad` - Consultar horarios libres filtrando por barbero, servicio y fecha (excluye automáticamente franjas horarias pasadas si la consulta es para el día en curso en la zona horaria del salón).
 - `POST /` - Reservar un turno (soporta reservas registradas e invitados).
 - `GET /` - Listar todos los turnos del sistema (requiere Rol Admin).
 - `GET /barbero/:id` - Listar turnos asignados a un barbero.
