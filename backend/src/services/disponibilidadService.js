@@ -22,6 +22,27 @@ function generarSlots(horaInicio, horaFin, duracion) {
   return slots;
 }
 
+function getArgentinaTime() {
+  const options = { timeZone: "America/Argentina/Buenos_Aires", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false };
+  const formatter = new Intl.DateTimeFormat("en-US", options);
+  const parts = formatter.formatToParts(new Date());
+  
+  const map = {};
+  for (const part of parts) {
+    map[part.type] = part.value;
+  }
+  
+  const yyyy = map.year;
+  const mm = map.month;
+  const dd = map.day;
+  const localToday = `${yyyy}-${mm}-${dd}`;
+  
+  const hours = Number(map.hour);
+  const minutes = Number(map.minute);
+  
+  return { localToday, hours, minutes };
+}
+
 const disponibilidadService = {
   /**
    * Devuelve los horarios disponibles para un barbero en una fecha dada,
@@ -65,7 +86,15 @@ const disponibilidadService = {
       }
     }
 
-    return todosSlots.filter((s) => !slotsOcupados.has(s));
+    let slotsDisponibles = todosSlots.filter((s) => !slotsOcupados.has(s));
+
+    const { localToday, hours, minutes } = getArgentinaTime();
+    if (fecha === localToday) {
+      const minutosActuales = hours * 60 + minutes;
+      slotsDisponibles = slotsDisponibles.filter((s) => toMinutes(s) > minutosActuales);
+    }
+
+    return slotsDisponibles;
   },
 };
 
