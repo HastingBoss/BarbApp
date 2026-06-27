@@ -184,21 +184,15 @@ export default function BarberoServicios() {
 
                       <div className="custom-field">
                         <label>Duración</label>
-                        <select
-                          value={item.duracion}
-                          onChange={(e) => handleValueChange(index, "duracion", e.target.value)}
-                          className="login-input"
-                          disabled
-                          style={{ opacity: 0.7, cursor: "not-allowed" }}
-                        >
-                          <option value="">Por defecto: {item.duracionBase} min</option>
-                          <option value="15">15 min</option>
-                          <option value="30">30 min</option>
-                          <option value="45">45 min</option>
-                          <option value="60">60 min</option>
-                          <option value="90">90 min</option>
-                          <option value="120">120 min</option>
-                        </select>
+                        <div className="input-with-preview">
+                          <input
+                            type="text"
+                            value={item.duracion !== "" && item.duracion !== undefined && item.duracion !== null ? `${item.duracion} min` : `Por defecto: ${item.duracionBase} min`}
+                            className="login-input"
+                            disabled
+                            style={{ opacity: 0.7, cursor: "not-allowed" }}
+                          />
+                        </div>
                       </div>
                     </div>
                   )}
