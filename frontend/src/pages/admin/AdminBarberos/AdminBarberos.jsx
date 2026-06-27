@@ -307,7 +307,7 @@ export default function AdminBarberos() {
                               }}
                               className="login-input"
                               style={{ padding: "6px 8px", margin: 0, fontSize: "13px" }}
-                              placeholder="Heredar del salón"
+                              placeholder="Por defecto del salón"
                             />
                           </div>
 
@@ -322,7 +322,7 @@ export default function AdminBarberos() {
                               className="login-input"
                               style={{ padding: "6px 8px", margin: 0, fontSize: "13px", height: "auto" }}
                             >
-                              <option value="">Heredar base</option>
+                              <option value="">Por defecto (base)</option>
                               <option value="15">15 min</option>
                               <option value="30">30 min</option>
                               <option value="45">45 min</option>

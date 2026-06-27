@@ -172,7 +172,7 @@ export default function BarberoServicios() {
                           <input
                             type="number"
                             min="0"
-                            placeholder={item.precio !== "" ? `${item.precio}%` : `Heredar: ${config.porcentajeSalon}%`}
+                            placeholder={item.precio !== "" ? `${item.precio}%` : `Por defecto: ${config.porcentajeSalon}%`}
                             value={item.precio}
                             onChange={(e) => handleValueChange(index, "precio", e.target.value)}
                             className="login-input"
@@ -191,7 +191,7 @@ export default function BarberoServicios() {
                           disabled
                           style={{ opacity: 0.7, cursor: "not-allowed" }}
                         >
-                          <option value="">Heredar: {item.duracionBase} min</option>
+                          <option value="">Por defecto: {item.duracionBase} min</option>
                           <option value="15">15 min</option>
                           <option value="30">30 min</option>
                           <option value="45">45 min</option>
