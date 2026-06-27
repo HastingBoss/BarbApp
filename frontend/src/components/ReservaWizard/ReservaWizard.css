@@ -97,8 +97,10 @@
 
 .horarios {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: 10px;
   margin: 20px 0;
+  width: 100%;
 }
 
 .hora-btn {
@@ -320,24 +322,7 @@
   color: var(--color-primary) !important;
 }
 
-/* Responsive Grid rules */
-@media (max-width: 480px) {
-  .horarios {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 
-@media (min-width: 481px) and (max-width: 768px) {
-  .horarios {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (min-width: 769px) {
-  .horarios {
-    grid-template-columns: repeat(6, 1fr);
-  }
-}
 
 @media (max-width: 768px) {
   .reserva-wizard {

@@ -202,8 +202,23 @@ export default function ReservaWizard() {
     return (
       <div className="reserva-success">
         <h2>✅ ¡Turno confirmado!</h2>
-
         <p>Tu turno fue confirmado exitosamente. Te enviamos un correo con los detalles.</p>
+        <div style={{ marginTop: "30px", display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+          {user && user.role === "cliente" ? (
+            <>
+              <button onClick={() => navigate("/cliente/historial")} className="btn">
+                Ver mis turnos
+              </button>
+              <button onClick={() => navigate("/")} className="btn btn-secondary">
+                Volver al inicio
+              </button>
+            </>
+          ) : (
+            <button onClick={() => navigate("/")} className="btn">
+              Volver al inicio
+            </button>
+          )}
+        </div>
       </div>
     );
   }
