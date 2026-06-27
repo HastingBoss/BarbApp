@@ -40,7 +40,7 @@ export default function StaffLogin() {
     <div className="staff-login-container">
       <div className="staff-login-card">
         <span className="staff-badge">Equipo</span>
-        <h2 className="staff-login-title">BARBERÍA PREMIUM</h2>
+        <h2 className="staff-login-title">BarbApp</h2>
         <p className="staff-login-subtitle">Acceso exclusivo para el equipo</p>
 
         <form onSubmit={handleSubmit} className="staff-login-form">
@@ -53,7 +53,7 @@ export default function StaffLogin() {
               required
               value={values.email}
               onChange={handleChange}
-              placeholder="nombre@barberiapremium.com"
+              placeholder="nombre@barbapp.com"
               className="staff-login-input"
             />
           </div>

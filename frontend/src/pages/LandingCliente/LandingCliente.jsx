@@ -7,7 +7,7 @@ export default function LandingCliente() {
   return (
     <div className="landing-container">
       <div className="landing-card">
-        <h1 className="landing-title">💈 BARBERÍA<span>PREMIUM</span></h1>
+        <h1 className="landing-title">💈 Barb<span>App</span></h1>
         <p className="landing-subtitle">El estilo y la distinción que te merecés</p>
 
         <div className="landing-actions">

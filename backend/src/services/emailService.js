@@ -12,13 +12,13 @@ const transporter = nodemailer.createTransport({
 const emailService = {
   async sendConfirmacion({ to, nombre, barberoNombre, servicio, fecha, hora }) {
     await transporter.sendMail({
-      from: `"Barbería" <${process.env.MAIL_USER}>`,
+      from: `"BarbApp" <${process.env.MAIL_USER}>`,
       to,
       subject: "✅ Turno confirmado",
       html: `
         <div style="background-color: #0f0f1a; padding: 40px 10px; font-family: sans-serif; min-height: 100%;">
           <div style="max-width: 480px; margin: 0 auto; background-color: #16213e; border-radius: 12px; padding: 32px; box-sizing: border-box;">
-            <div style="color: #c9a84c; font-size: 24px; text-align: center; margin-bottom: 24px; font-weight: bold; letter-spacing: 2px;">BARBERÍA</div>
+            <div style="color: #c9a84c; font-size: 24px; text-align: center; margin-bottom: 24px; font-weight: bold; letter-spacing: 2px;">BarbApp</div>
             <div style="color: #ffffff; font-size: 18px; font-weight: bold; margin-bottom: 12px;">¡Hola ${nombre}!</div>
             <div style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px;">Tu turno fue confirmado exitosamente.</div>
             <table style="width: 100%; border-collapse: collapse;">
@@ -51,7 +51,7 @@ const emailService = {
   async sendVerificacion({ to, nombre, token }) {
     const link = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
     await transporter.sendMail({
-      from: `"Barbería" <${process.env.MAIL_USER}>`,
+      from: `"BarbApp" <${process.env.MAIL_USER}>`,
       to,
       subject: "📧 Verifica tu cuenta de correo",
       html: `

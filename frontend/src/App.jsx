@@ -19,6 +19,7 @@ import AdminServicios from "./pages/admin/AdminServicios/AdminServicios"
 import AdminTurnos from "./pages/admin/AdminTurnos/AdminTurnos"
 import AdminConfig from "./pages/admin/AdminConfig/AdminConfig"
 import BarberoAgenda from "./pages/barbero/BarberoAgenda/BarberoAgenda"
+import BarberoServicios from "./pages/barbero/BarberoServicios/BarberoServicios"
 import ClienteReserva from "./pages/cliente/ClienteReserva/ClienteReserva"
 import ClienteHistorial from "./pages/cliente/ClienteHistorial/ClienteHistorial"
 
@@ -57,6 +58,7 @@ const App = () => {
           <Route element={<StaffOnlyMiddleware />}>
             <Route element={<BarberoLayout />}>
               <Route path="/barbero" element={<BarberoAgenda />} />
+              <Route path="/barbero/servicios" element={<BarberoServicios />} />
             </Route>
           </Route>
 

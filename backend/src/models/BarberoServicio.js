@@ -4,7 +4,8 @@ const barberoServicioSchema = new mongoose.Schema(
   {
     barbero: { type: mongoose.Schema.Types.ObjectId, ref: "Barbero", required: true },
     servicio: { type: mongoose.Schema.Types.ObjectId, ref: "Servicio", required: true },
-    precio: { type: Number, min: 0 }, // opcional, si no se define hereda precioBase + %
+    porcentaje: { type: Number, min: 0 }, // opcional, si no se define hereda % del salón
+
     duracion: { type: Number, min: 15 }, // opcional, si no se define hereda duracion de Servicio
     active: { type: Boolean, default: true },
   },

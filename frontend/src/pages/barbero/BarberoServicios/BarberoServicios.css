@@ -1,0 +1,235 @@
+.barbero-servicios-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.barbero-servicios-header {
+  margin-bottom: 24px;
+}
+
+.barbero-servicios-header h1 {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--color-text);
+}
+
+.barbero-servicios-header h1 span {
+  color: var(--color-primary);
+}
+
+.barbero-servicios-header .subtitle {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+.barbero-servicios-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.services-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.service-item-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: rgba(255, 255, 255, 0.02);
+  transition: all 0.25s ease;
+  gap: 16px;
+}
+
+.service-item-row.active {
+  border-color: rgba(207, 168, 100, 0.4);
+  background-color: rgba(207, 168, 100, 0.03);
+}
+
+.service-info-col {
+  flex: 1;
+  min-width: 250px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  padding-left: 32px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #242a35;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+  border-color: var(--color-primary);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkbox-container .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--color-bg);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.service-name-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.service-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 2px;
+}
+
+.service-base-info {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.service-custom-col {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  min-width: 320px;
+}
+
+.custom-field {
+  flex: 1;
+  min-width: 140px;
+}
+
+.custom-field label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  display: block;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.custom-field input,
+.custom-field select {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  background-color: #0f1115;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  transition: border-color 0.2s;
+  height: 38px;
+  margin: 0;
+}
+
+.custom-field input:focus,
+.custom-field select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.btn-save {
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-save:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .service-item-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .service-custom-col {
+    width: 100%;
+    min-width: 100%;
+  }
+  
+  .custom-field {
+    min-width: calc(50% - 8px);
+  }
+}

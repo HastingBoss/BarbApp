@@ -62,12 +62,13 @@ export default function AdminBarberos() {
           nombre: s.nombre,
           duracionBase: s.duracion,
           active: match ? match.active : false,
-          precio: match && match.precio !== undefined && match.precio !== null ? match.precio : "",
-          duracion: match && match.duracion !== undefined && match.duracion !== null ? match.duracion : "",
+          precio: match && match.precioCustom !== undefined && match.precioCustom !== null ? match.precioCustom : "",
+          duracion: match && match.duracionCustom !== undefined && match.duracionCustom !== null ? match.duracionCustom : "",
           relationId: match ? match._id : null,
           originalActive: match ? match.active : false,
-          originalPrecio: match && match.precio !== undefined && match.precio !== null ? match.precio : "",
-          originalDuracion: match && match.duracion !== undefined && match.duracion !== null ? match.duracion : ""
+          originalPrecio: match && match.precioCustom !== undefined && match.precioCustom !== null ? match.precioCustom : "",
+          originalDuracion: match && match.duracionCustom !== undefined && match.duracionCustom !== null ? match.duracionCustom : ""
+
         };
       });
       setTempServicios(mapped);
@@ -85,14 +86,14 @@ export default function AdminBarberos() {
     setActualizarServiciosError("");
     try {
       for (const item of tempServicios) {
-        const precio = item.precio === "" ? undefined : Number(item.precio);
+        const porcentaje = item.precio === "" ? undefined : Number(item.precio);
         const duracion = item.duracion === "" ? undefined : Number(item.duracion);
 
         if (item.active && !item.relationId) {
           await api.post("/barbero-servicios", {
             barbero: selectedBarbero._id,
             servicio: item.servicioId,
-            precio,
+            porcentaje,
             duracion
           });
         } else if (!item.active && item.relationId && item.originalActive) {
@@ -100,13 +101,14 @@ export default function AdminBarberos() {
         } else if (item.active && item.relationId) {
           if (item.precio !== item.originalPrecio || item.duracion !== item.originalDuracion || !item.originalActive) {
             await api.put(`/barbero-servicios/${item.relationId}`, {
-              precio,
+              porcentaje,
               duracion,
               active: true
             });
           }
         }
       }
+
       setActiveModal(null);
       loadData();
     } catch (err) {
@@ -294,7 +296,7 @@ export default function AdminBarberos() {
                       {item.active && (
                         <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>
                           <div style={{ flex: 1 }}>
-                            <label style={{ fontSize: "11px", color: "var(--color-text-muted)", display: "block", marginBottom: "2px" }}>Precio Custom (Opcional)</label>
+                            <label style={{ fontSize: "11px", color: "var(--color-text-muted)", display: "block", marginBottom: "2px" }}>Porcentaje Comisión (%)</label>
                             <input
                               type="number"
                               min="0"
@@ -305,9 +307,10 @@ export default function AdminBarberos() {
                               }}
                               className="login-input"
                               style={{ padding: "6px 8px", margin: 0, fontSize: "13px" }}
-                              placeholder="Heredar base"
+                              placeholder="Heredar del salón"
                             />
                           </div>
+
                           <div style={{ flex: 1 }}>
                             <label style={{ fontSize: "11px", color: "var(--color-text-muted)", display: "block", marginBottom: "2px" }}>Duración Custom (Opcional)</label>
                             <select

@@ -23,7 +23,7 @@ export default function Sidebar() {
       )}
       <aside className={`admin-sidebar ${menuOpen ? "menu-open" : ""}`}>
         <div className="sidebar-brand">
-          💈 BARBERÍA<span>PREMIUM</span>
+          💈 Barb<span>App</span>
         </div>
         {user && (
           <button className="sidebar-hamburger" onClick={() => setMenuOpen(!menuOpen)}>

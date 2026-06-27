@@ -8,9 +8,10 @@ const router = Router();
 router.get("/barbero/:barberoId", barberoServicioController.getByBarbero);
 router.get("/servicio/:servicioId", barberoServicioController.getByServicio);
 
-// Admin routes
-router.post("/", authenticate, authorize("admin"), barberoServicioController.create);
-router.put("/:id", authenticate, authorize("admin"), barberoServicioController.updateById);
-router.delete("/:id", authenticate, authorize("admin"), barberoServicioController.deleteById);
+// Admin and Barbero routes
+router.post("/", authenticate, authorize("admin", "barbero"), barberoServicioController.create);
+router.put("/:id", authenticate, authorize("admin", "barbero"), barberoServicioController.updateById);
+router.delete("/:id", authenticate, authorize("admin", "barbero"), barberoServicioController.deleteById);
+
 
 module.exports = router;

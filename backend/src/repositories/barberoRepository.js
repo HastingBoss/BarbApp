@@ -1,7 +1,7 @@
 const Barbero = require("../models/Barbero");
 const BarberoServicio = require("../models/BarberoServicio");
-
 const configRepository = require("./configRepository");
+const { calculateDynamicFields } = require("../utils/precioHelper");
 
 async function attachRelationsToBarbero(barbero) {
   if (!barbero) return null;
@@ -11,29 +11,23 @@ async function attachRelationsToBarbero(barbero) {
 
   // Attach services
   const docs = await BarberoServicio.find({ barbero: barbero._id, active: true }).populate("servicio");
-  const servicios = docs.map(d => {
+  const servicios = await Promise.all(docs.map(async d => {
     if (!d.servicio) return null;
-    
-    const base = d.servicio.precioBase || 0;
-    const finalPrecio = d.precio !== undefined && d.precio !== null 
-      ? d.precio 
-      : Math.round(base * (1 + porcentaje / 100) * 100) / 100;
-      
-    const finalDuracion = d.duracion || d.servicio.duracion || 0;
-
+    const computed = await calculateDynamicFields(d, porcentaje);
     return {
       _id: d.servicio._id,
       nombre: d.servicio.nombre,
-      duracion: finalDuracion,
-      precio: finalPrecio,
+      duracion: computed.duracion,
+      precio: computed.precio,
       barberoServicioId: d._id
     };
-  }).filter(Boolean);
+  }));
 
   const obj = barbero.toObject ? barbero.toObject() : barbero;
-  obj.servicios = servicios;
+  obj.servicios = servicios.filter(Boolean);
   return obj;
 }
+
 
 const barberoRepository = {
   async findAll() {

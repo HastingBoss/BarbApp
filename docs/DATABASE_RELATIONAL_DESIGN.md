@@ -1,8 +1,6 @@
-# Documentación del Sistema
+# Diseño de la Base de Datos y Modelo Relacional (BarbApp)
 
-## Diseño Relacional
-
-El modelo de datos completo de la aplicación está diseñado de forma normalizada, de manera que es 100% transferible a una base de datos relacional (como PostgreSQL, MySQL o SQL Server) sin requerir cambios estructurales. 
+El modelo de datos completo de la aplicación está diseñado de forma normalizada, de manera que es 100% transferible a una base de datos relacional (como PostgreSQL, MySQL o SQL Server) sin requerir cambios estructurales.
 
 Esto se logra eliminando por completo el uso de arrays de objetos o subdocumentos embebidos en los modelos principales. Cada relación y entidad se comporta de forma idéntica a una tabla SQL:
 
@@ -22,7 +20,7 @@ Esto se logra eliminando por completo el uso de arrays de objetos o subdocumento
 
 4. **BarberoServicio (Colección `BarberoServicio`)**
    - Representa la tabla de unión/intersección `barbero_servicios` para modelar la relación Muchos a Muchos entre `Barbero` y `Servicio`.
-   - Contiene claves foráneas hacia `barberos` y `servicios`, además de atributos opcionales de anulación (`precio` y `duracion`).
+   - Contiene claves foráneas hacia `barberos` y `servicios`, además de atributos opcionales de anulación (`porcentaje` y `duracion`).
 
 5. **ClienteInvitado (Colección `ClienteInvitado`)**
    - Representa la tabla `cliente_invitados` para almacenar de forma simple los datos de contacto de clientes no registrados.

@@ -16,7 +16,7 @@ async function seed() {
       return;
     }
 
-    const email = process.env.ADMIN_EMAIL || "admin@barberia.com";
+    const email = process.env.ADMIN_EMAIL || "admin@barbapp.com";
     const password = process.env.ADMIN_PASSWORD || "password_seguro";
 
     const hashedPassword = await bcrypt.hash(password, 10);

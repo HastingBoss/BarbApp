@@ -1,8 +1,9 @@
 {
   "info": {
     "_postman_id": "7a3b3a3c-d38a-4933-bfb9-623cf5c77840",
-    "name": "Barbería API",
-    "description": "Colección completa para la API de Barbería que gestiona usuarios, perfiles de barberos, servicios personalizados, reservas de turnos, configuraciones globales y cron jobs.",
+    "name": "BarbApp API",
+    "description": "Colección completa de endpoints para la API de BarbApp (Sistema de Gestión de Turnos de Barbería). Desarrollado por Hasting.dev (Luca Guerra). Consulta el archivo README.md y docs/DATABASE_RELATIONAL_DESIGN.md para obtener detalles sobre la arquitectura y la base de datos.",
+
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [

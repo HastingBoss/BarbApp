@@ -1,6 +1,9 @@
-# Barberia - Sistema de Gestion de Turnos
+# BarbApp - Sistema de Gestión de Turnos de Barbería
 
-Sistema de gestion de turnos para barberias con arquitectura monorepo, que incluye un backend en Node.js y un frontend en React estructurado modularmente con hojas de estilo CSS dedicadas por componente.
+**Desarrollador:** Hasting.dev (Luca Guerra)
+
+Sistema de gestión de turnos para barberías con arquitectura monorepo, que incluye un backend en Node.js y un frontend en React estructurado modularmente con hojas de estilo CSS dedicadas por componente.
+
 
 ## Stack Tecnologico
 
@@ -29,7 +32,7 @@ Sistema de gestion de turnos para barberias con arquitectura monorepo, que inclu
 ## Estructura del Proyecto
 
 ```text
-barberia/
+BarbApp/
 ├── backend/
 │   ├── src/
 │   │   ├── config/
@@ -150,8 +153,8 @@ barberia/
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/HastingBoss/BAppber.git
-cd Barber-SaaS
+git clone https://github.com/HastingBoss/BarbApp.git
+cd BarbApp
 
 # 2. Instalar dependencias para todos los workspaces
 npm run install:all
@@ -244,4 +247,3 @@ npm run dev:frontend
 ### Config - `/api/config`
 - `GET /` - Obtener configuración global del salón (porcentaje de recargo).
 - `PUT /` - Actualizar porcentaje de recargo del salón (requiere Rol Admin).
-#   B a r b A p p

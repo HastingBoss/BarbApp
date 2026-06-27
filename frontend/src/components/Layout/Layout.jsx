@@ -74,7 +74,7 @@ export default function Layout({ children }) {
 
       <nav className="navbar">
         <div className="navbar-brand">
-          💈 BARBERÍA<span>PREMIUM</span>
+          💈 Barb<span>App</span>
         </div>
         {user && (
           <button className="navbar-hamburger" onClick={() => setMenuOpen(!menuOpen)}>

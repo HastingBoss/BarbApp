@@ -23,7 +23,7 @@ export default function BarberoNav() {
       )}
       <aside className={`barbero-sidebar ${menuOpen ? "menu-open" : ""}`}>
         <div className="barberonav-brand">
-          💈 BARBERÍA<span>PREMIUM</span>
+          💈 Barb<span>App</span>
         </div>
         {user && (
           <button className="barberonav-hamburger" onClick={() => setMenuOpen(!menuOpen)}>
@@ -34,6 +34,10 @@ export default function BarberoNav() {
           <NavLink to="/barbero" end onClick={closeMenu} className={({ isActive }) => `barberonav-item ${isActive ? "active" : ""}`}>
             Mi Agenda
           </NavLink>
+          <NavLink to="/barbero/servicios" onClick={closeMenu} className={({ isActive }) => `barberonav-item ${isActive ? "active" : ""}`}>
+            Mis Servicios
+          </NavLink>
+
           {user && (
             <div className="barberonav-user">
               <span className="barberonav-user-text">

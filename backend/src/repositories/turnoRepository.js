@@ -1,16 +1,19 @@
 const Turno = require("../models/Turno");
+const { calculateDynamicTurno } = require("../utils/precioHelper");
 
 const turnoRepository = {
   async create(data) {
     const turno = new Turno(data);
-    return turno.save();
+    const saved = await turno.save();
+    return this.findById(saved._id);
   },
 
   async findById(id) {
-    return Turno.findById(id)
+    const doc = await Turno.findById(id)
       .populate({ path: "barbero", populate: { path: "user", select: "name email" } })
       .populate({ path: "barberoServicio", populate: { path: "servicio" } })
       .populate("cliente");
+    return calculateDynamicTurno(doc);
   },
 
   // Turnos de un barbero en una fecha específica (para calcular disponibilidad)
@@ -20,54 +23,60 @@ const turnoRepository = {
     const fin = new Date(fecha);
     fin.setHours(23, 59, 59, 999);
 
-    return Turno.find({
+    const docs = await Turno.find({
       barbero: barberoId,
       fecha: { $gte: inicio, $lte: fin },
       estado: { $in: ["pendiente", "completado"] },
     }).populate({ path: "barberoServicio", populate: { path: "servicio" } });
+    return Promise.all(docs.map(doc => calculateDynamicTurno(doc)));
   },
 
   // Todos los turnos (admin)
   async findAll(filters = {}) {
-    return Turno.find(filters)
+    const docs = await Turno.find(filters)
       .populate({ path: "barbero", populate: { path: "user", select: "name" } })
       .populate({ path: "barberoServicio", populate: { path: "servicio" } })
       .populate("cliente")
       .sort({ fecha: 1, horaInicio: 1 });
+    return Promise.all(docs.map(doc => calculateDynamicTurno(doc)));
   },
 
   // Turnos de un barbero (su agenda)
   async findByBarbero(barberoId) {
-    return Turno.find({ barbero: barberoId })
+    const docs = await Turno.find({ barbero: barberoId })
       .populate({ path: "barberoServicio", populate: { path: "servicio" } })
       .populate("cliente")
       .sort({ fecha: 1, horaInicio: 1 });
+    return Promise.all(docs.map(doc => calculateDynamicTurno(doc)));
   },
 
   // Turnos pendientes de confirmación para un barbero
   async findPendientesByBarbero(barberoId) {
-    return Turno.find({ barbero: barberoId, estado: "pendiente" })
+    const docs = await Turno.find({ barbero: barberoId, estado: "pendiente" })
       .populate({ path: "barberoServicio", populate: { path: "servicio" } })
       .populate("cliente")
       .sort({ fecha: 1, horaInicio: 1 });
+    return Promise.all(docs.map(doc => calculateDynamicTurno(doc)));
   },
 
   // Turnos de un cliente registrado
   async findByCliente(clienteId) {
-    return Turno.find({ cliente: clienteId, clienteModel: "User" })
+    const docs = await Turno.find({ cliente: clienteId, clienteModel: "User" })
       .populate({ path: "barbero", populate: { path: "user", select: "name" } })
       .populate({ path: "barberoServicio", populate: { path: "servicio" } })
       .sort({ fecha: -1 });
+    return Promise.all(docs.map(doc => calculateDynamicTurno(doc)));
   },
 
   async findMetricasByBarbero(barberoId, desde, hasta) {
     const inicio = new Date(desde);
     const fin = new Date(hasta);
-    return Turno.find({
+    const docs = await Turno.find({
       barbero: barberoId,
       estado: "completado",
       fecha: { $gte: inicio, $lte: fin },
     }).populate({ path: "barberoServicio", populate: { path: "servicio" } });
+    return Promise.all(docs.map(doc => calculateDynamicTurno(doc)));
   },
 
   async findTurnosByBarberoYFecha(barberoId, fecha) {
@@ -76,7 +85,7 @@ const turnoRepository = {
     const fin = new Date(fecha);
     fin.setHours(23, 59, 59, 999);
 
-    return Turno.find({
+    const docs = await Turno.find({
       barbero: barberoId,
       fecha: { $gte: inicio, $lte: fin },
       estado: { $in: ["pendiente", "completado"] },
@@ -84,11 +93,15 @@ const turnoRepository = {
       .populate({ path: "barberoServicio", populate: { path: "servicio" } })
       .populate("cliente", "name nombre")
       .sort({ horaInicio: 1 });
+    return Promise.all(docs.map(doc => calculateDynamicTurno(doc)));
   },
 
   async updateById(id, data) {
-    return Turno.findByIdAndUpdate(id, data, { new: true });
+    const updated = await Turno.findByIdAndUpdate(id, data, { new: true });
+    if (!updated) return null;
+    return this.findById(updated._id);
   },
 };
+
 
 module.exports = turnoRepository;
